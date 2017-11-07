@@ -3,25 +3,24 @@
 get_filename_component(MY_CURRENT_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
 file(READ "${MY_CURRENT_DIR}/README.rst" DOCUMENTATION)
 
-# itk_module() defines the module dependencies in ITKVtkGlue
-# ITKVtkGlue depends on ITKCommon
-# The testing module in ITKVtkGlue depends on ITKTestKernel
-# and ITKMetaIO(besides ITKVtkGlue and ITKCore)
-# By convention those modules outside of ITK are not prefixed with
-# ITK.
-
 # define the dependencies of the include module and the tests
 itk_module(ITKVtkGlue
+  ENABLE_SHARED
   DEPENDS
     ITKCommon
-    ITKStatistics
   COMPILE_DEPENDS
-    ITKImageSources
+    ITKImageIntensity
   TEST_DEPENDS
     ITKTestKernel
-    ITKMetaIO
-  DESCRIPTION
-    "${DOCUMENTATION}"
+    ITKSmoothing
+    ITKLabelMap
+    ITKImageFusion
+    ITKStatistics
   EXCLUDE_FROM_DEFAULT
-  ENABLE_SHARED
-)
+  DESCRIPTION
+    "${DOCUMENTATION}")
+
+# extra test dependency on Smoothing is introduced by itkVtkMedianImagefilterTest.
+# extra test dependency on ImageCompose is introduced by QuickViewTest.
+# extra test dependency on LabelMap and ImageFusion is introduced by itkVtkConnectedComponentImageFilterTest
+# extra test dependency on Statistics is introduced by itkVtkConnectedComponentImageFilterTest
