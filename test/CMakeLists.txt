@@ -10,6 +10,7 @@ set(ITKVtkGlueTests
   )
 
 CreateTestDriver(ITKVtkGlue "${ITKVtkGlue-Test_LIBRARIES}" "${ITKVtkGlueTests}")
+target_link_libraries_with_dynamic_lookup(ITKVtkGlueTestDriver ${ITKVtkGlue_VTK_LIBRARIES})
 
 itk_add_test(
   NAME itkVtkMedianImageFilterTest

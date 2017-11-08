@@ -144,6 +144,9 @@ if(NOT ITK_BINARY_DIR)
 endif()
 ")
 
+# For portable Python packages
+include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/targetLinkLibrariesWithDynamicLookup.cmake)
+
 if(NOT ITK_SOURCE_DIR)
   find_package(ITK REQUIRED)
   list(APPEND CMAKE_MODULE_PATH ${ITK_CMAKE_DIR})

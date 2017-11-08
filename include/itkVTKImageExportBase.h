@@ -19,7 +19,7 @@
 #define itkVTKImageExportBase_h
 
 #include "itkProcessObject.h"
-#include "ITKVTKExport.h"
+#include "ITKVtkGlueExport.h"
 
 namespace itk
 {
@@ -34,7 +34,7 @@ namespace itk
  * \sa VTKImageExport
  * \ingroup ITKVtkGlue
  */
-class ITKVTK_EXPORT VTKImageExportBase:public ProcessObject
+class ITKVtkGlue_EXPORT VTKImageExportBase:public ProcessObject
 {
 public:
   /** Standard class typedefs. */

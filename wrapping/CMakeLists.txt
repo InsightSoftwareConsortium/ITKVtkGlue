@@ -5,8 +5,7 @@ itk_wrap_module(ITKVtkGlue)
       "Only the c++ version of the module will be built.")
   else()
     list(APPEND WRAPPER_SWIG_LIBRARY_FILES "${CMAKE_CURRENT_SOURCE_DIR}/VtkGlue.i")
-    set(WRAPPER_LIBRARY_DEPENDS ITKCommon
-      ITKVTK)
+    set(WRAPPER_LIBRARY_DEPENDS ITKCommon)
 
     set(WRAPPER_LIBRARY_LINK_LIBRARIES ${ITK_LIBRARIES})
 
@@ -16,10 +15,10 @@ itk_end_wrap_module()
 
 if(ITK_WRAP_PYTHON AND PYTHON_VERSION_STRING VERSION_LESS 3.0)
   if(${VTK_VERSION} VERSION_LESS 6.0.0)
-    target_link_libraries(ITKVtkGluePython LINK_PUBLIC vtkImagingPythonD vtkPythonCore)
+    target_link_libraries_with_dynamic_lookup(ITKVtkGluePython vtkImagingPythonD vtkPythonCore)
   elseif(TARGET vtkImagingKitPythonD)
-    target_link_libraries(ITKVtkGluePython LINK_PUBLIC vtkImagingKitPythonD)
+    target_link_libraries_with_dynamic_lookup(ITKVtkGluePython vtkImagingKitPythonD)
   else()
-    target_link_libraries(ITKVtkGluePython LINK_PUBLIC vtkImagingCorePythonD)
+    target_link_libraries_with_dynamic_lookup(ITKVtkGluePython vtkImagingCorePythonD)
   endif()
 endif()

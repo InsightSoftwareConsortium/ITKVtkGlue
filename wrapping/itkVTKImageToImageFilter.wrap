@@ -1,3 +1,4 @@
+itk_wrap_include("itkvtkPython.h")
 itk_wrap_class("itk::VTKImageToImageFilter" POINTER)
   UNIQUE(image_types "UC;UL;${WRAP_ITK_SCALAR};${WRAP_ITK_COLOR}")
   itk_wrap_filter_dims(dims "1;2;3")
