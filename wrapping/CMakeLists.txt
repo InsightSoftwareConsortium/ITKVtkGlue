@@ -11,6 +11,10 @@ itk_wrap_module(ITKVtkGlue)
 
     itk_auto_load_submodules()
   endif()
+  # We need to ensure that the VTK libraries are loaded, which are used by this
+  # module, but with weak linking. Since VTK does not use lazy loading yet,
+  # just 'import vtk' should do the trick.
+  set(ITK_WRAP_PYTHON_LIBRARY_IMPORTS "import vtk\n${ITK_WRAP_PYTHON_LIBRARY_IMPORTS}")
 itk_end_wrap_module()
 
 if(ITK_WRAP_PYTHON AND PYTHON_VERSION_STRING VERSION_LESS 3.0)
