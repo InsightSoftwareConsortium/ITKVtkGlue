@@ -6,6 +6,9 @@ project(ITKVtkGlue)
 
 set(ITKVtkGlue_LIBRARIES ITKVtkGlue)
 
+# Skip the header tests because of weak linking
+set(ITKVtkGlue_THIRD_PARTY 1)
+
 #
 # Add the third party includes and libraries
 #
