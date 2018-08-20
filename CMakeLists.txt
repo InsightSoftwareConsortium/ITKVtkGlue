@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 2.8.12)
 if(NOT ITK_SOURCE_DIR)
   include(itk-module-init.cmake)
+  find_package(ITK REQUIRED)
 endif()
 project(ITKVtkGlue)
 
@@ -53,6 +54,9 @@ else()
     ${_wrap_module}
     )
 endif()
+# An artifact of the VTKPythonPackage build configuration
+list(FILTER ITKVtkGlue_VTK_LIBRARIES EXCLUDE REGEX
+  "libpython-not-needed-symbols")
 
 # The VTK DICOMParser and vtkmetaio includes conflict with the ITK
 # versions. Here we remove them from the include directories.
@@ -63,6 +67,15 @@ string(REGEX REPLACE "[^;]*vtkmetaio;"
          "" ITKVtkGlue_VTK_INCLUDE_DIRS "${ITKVtkGlue_VTK_INCLUDE_DIRS}")
 string(REGEX REPLACE "[^;]*DICOMParser;"
          "" ITKVtkGlue_VTK_INCLUDE_DIRS "${ITKVtkGlue_VTK_INCLUDE_DIRS}")
+if(ITK_WRAP_PYTHON)
+  # for vtkPythonUtil.h, vtkPython.h, vtkPythonConfigure.h,
+  # vtkPythonCompatibility.h, vtkPythonConfigure.h, ...
+  list(APPEND ITKVtkGlue_VTK_INCLUDE_DIRS
+    "${VTK_CMAKE_DIR}/../Wrapping/PythonCore"
+    "${VTK_CMAKE_DIR}/../Utilities/Python"
+    "${VTK_DIR}/Utilities/Python"
+    )
+endif()
 
 # Set up the include and library dirs needed for the module
 set(ITKVtkGlue_SYSTEM_INCLUDE_DIRS ${ITKVtkGlue_VTK_INCLUDE_DIRS})
@@ -106,6 +119,10 @@ else()
     )
 
   set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS \${ITKVtkGlue_VTK_DEFINITIONS})
+
+  # An artifact of the VTKPythonPackage build configuration
+  list(FILTER ITKVtkGlue_VTK_LIBRARIES EXCLUDE REGEX
+    "libpython-not-needed-symbols")
 endif()
 ")
 set(ITKVtkGlue_EXPORT_CODE_BUILD "
@@ -144,6 +161,10 @@ if(NOT ITK_BINARY_DIR)
 
     set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS \${ITKVtkGlue_VTK_DEFINITIONS})
   endif()
+
+  # An artifact of the VTKPythonPackage build configuration
+  list(FILTER ITKVtkGlue_VTK_LIBRARIES EXCLUDE REGEX
+    "libpython-not-needed-symbols")
 endif()
 ")
 
