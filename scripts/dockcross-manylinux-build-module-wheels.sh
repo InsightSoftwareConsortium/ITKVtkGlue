@@ -20,4 +20,4 @@ mkdir -p build
 DOCKER_ARGS="-v $(pwd)/build:/work/build/ -v $script_dir/../ITKPythonPackage:/ITKPythonPackage -v $script_dir/../VTKPythonPackage:/VTKPythonPackage"
 /tmp/insighttoolkit-itkvtkglue \
   -a "$DOCKER_ARGS" \
-  "/work/scripts/internal/dockcross-manylinux-build-test.sh" "$@"
+  "/work/scripts/internal/manylinux-build-module-wheels.sh" "$@"
