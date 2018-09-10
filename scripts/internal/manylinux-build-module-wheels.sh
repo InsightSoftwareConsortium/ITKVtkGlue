@@ -50,16 +50,24 @@ for PYBIN in "${PYBINARIES[@]}"; do
   if [[ ! -d ${itk_source_dir} ]]; then
     echo 'ITK source tree not available!' 1>&2
     exit 1
-
   fi
+
   vtk_build_dir=/work/VTK-$(basename $(dirname ${PYBIN}))-manylinux1_${ARCH}
   ln -fs /VTKPythonPackage/VTK-$(basename $(dirname ${PYBIN}))-manylinux1_${ARCH} $vtk_build_dir
   if [[ ! -d ${vtk_build_dir} ]]; then
     echo 'VTK build tree not available!' 1>&2
     exit 1
   fi
+  itk_source_dir=/work/standalone-${ARCH}-build/VTK-source
+  ln -fs /VTKPythonPackage/standalone-${ARCH}-build/VTK-source /work/standalone-${ARCH}-build/VTK-source
+  if [[ ! -d ${itk_source_dir} ]]; then
+    echo 'VTK source tree not available!' 1>&2
+    exit 1
+  fi
 
-  ${PYBIN}/python setup.py bdist_wheel --build-type MinSizeRel -G Ninja -- \
+  ${PYBIN}/python -m pip install --upgrade scikit-build
+
+  ${PYBIN}/python setup.py bdist_wheel --build-type MinSizeRel -- \
     -Wno-dev \
     -DITK_DIR:PATH=${itk_build_dir} \
     -DVTK_DIR:PATH=${vtk_build_dir} \

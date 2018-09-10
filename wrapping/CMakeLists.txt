@@ -3,14 +3,13 @@ itk_wrap_module(ITKVtkGlue)
     message(WARNING
       "The ITKVtkGlue module can only built with Python 3 and VTK >= 7.\n"
       "Only the c++ version of the module will be built.")
-  else()
-    list(APPEND WRAPPER_SWIG_LIBRARY_FILES "${CMAKE_CURRENT_SOURCE_DIR}/VtkGlue.i")
-    set(WRAPPER_LIBRARY_DEPENDS ITKCommon)
-
-    set(WRAPPER_LIBRARY_LINK_LIBRARIES ${ITK_LIBRARIES})
-
-    itk_auto_load_submodules()
   endif()
+  list(APPEND WRAPPER_SWIG_LIBRARY_FILES "${CMAKE_CURRENT_SOURCE_DIR}/VtkGlue.i")
+  set(WRAPPER_LIBRARY_DEPENDS ITKCommon)
+
+  set(WRAPPER_LIBRARY_LINK_LIBRARIES ${ITK_LIBRARIES})
+
+  itk_auto_load_submodules()
   # We need to ensure that the VTK libraries are loaded, which are used by this
   # module, but with weak linking. Since VTK does not use lazy loading yet,
   # just 'import vtk' should do the trick.
