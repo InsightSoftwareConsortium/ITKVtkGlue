@@ -71,6 +71,7 @@ for PYBIN in "${PYBINARIES[@]}"; do
     -Wno-dev \
     -DITK_DIR:PATH=${itk_build_dir} \
     -DVTK_DIR:PATH=${vtk_build_dir} \
+    -DWRAP_ITK_INSTALL_COMPONENT_IDENTIFIER:STRING=PythonWheel \
     -DCMAKE_CXX_COMPILER_TARGET:STRING=$(uname -p)-linux-gnu \
     -DBUILD_TESTING:BOOL=OFF \
     -DITK_WRAP_PYTHON:BOOL=ON \
