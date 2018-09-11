@@ -82,25 +82,6 @@ for PYBIN in "${PYBINARIES[@]}"; do
     -DPYTHON_LIBRARY:FILEPATH=${PYTHON_LIBRARY} \
     || exit 1
   ${PYBIN}/python setup.py clean
-
-  #cd /work/build
-  #rm -rf *
-  #cmake \
-    #-Wno-dev \
-    #-G Ninja \
-    #-DCMAKE_BUILD_TYPE:STRING=MinSizeRel \
-    #-DITK_DIR:PATH=${itk_build_dir} \
-    #-DVTK_DIR:PATH=${vtk_build_dir} \
-    #-DCMAKE_CXX_COMPILER_TARGET:STRING=$(uname -p)-linux-gnu \
-    #-DBUILD_TESTING:BOOL=ON \
-    #-DITK_WRAP_PYTHON:BOOL=ON \
-    #-DITK_USE_SYSTEM_SWIG:BOOL=ON \
-    #-DSWIG_EXECUTABLE:FILEPATH=${itk_build_dir}/Wrapping/Generators/SwigInterface/swig/bin/swig \
-    #-DPYTHON_EXECUTABLE:FILEPATH=${PYTHON_EXECUTABLE} \
-    #-DPYTHON_INCLUDE_DIR:PATH=${PYTHON_INCLUDE_DIR} \
-    #-DPYTHON_LIBRARY:FILEPATH=${PYTHON_LIBRARY} \
-    #..
-  #ninja
 done
 
 # This step will fixup the wheel switching from 'linux' to 'manylinux1' tag

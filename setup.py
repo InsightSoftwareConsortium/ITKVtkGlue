@@ -45,6 +45,6 @@ setup(
     url=r'https://www.itk.org/',
     install_requires=[
         r'itk>=5.0b01',
-        r'vtk=8.1.1'
+        r'vtk==8.1.1'
     ]
     )
