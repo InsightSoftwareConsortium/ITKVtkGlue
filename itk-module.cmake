@@ -8,6 +8,7 @@ itk_module(ITKVtkGlue
   ENABLE_SHARED
   DEPENDS
     ITKCommon
+    ITKVTK
   COMPILE_DEPENDS
     ITKImageIntensity
   TEST_DEPENDS
