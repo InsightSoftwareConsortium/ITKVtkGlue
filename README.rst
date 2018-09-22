@@ -1,14 +1,20 @@
 ITKVtkGlue
-=================================
+==========
 
-.. image:: https://circleci.com/gh/InsightSoftwareConsortium/ITKVtkGlue.svg?style=shield
-    :target: https://circleci.com/gh/InsightSoftwareConsortium/ITKVtkGlue
+.. |CircleCI| image:: https://circleci.com/gh/InsightSoftwareConsortium/ITKVTKGlue.svg?style=shield
+    :target: https://circleci.com/gh/InsightSoftwareConsortium/ITKVTKGlue
 
-.. image:: https://travis-ci.org/InsightSoftwareConsortium/ITKVtkGlue.svg?branch=master
-    :target: https://travis-ci.org/InsightSoftwareConsortium/ITKVtkGlue
+.. |TravisCI| image:: https://travis-ci.org/InsightSoftwareConsortium/ITKVTKGlue.svg?branch=master
+    :target: https://travis-ci.org/InsightSoftwareConsortium/ITKVTKGlue
 
-.. image:: https://img.shields.io/appveyor/ci/itkrobot/itkvtkglue.svg
+.. |AppVeyor| image:: https://img.shields.io/appveyor/ci/itkrobot/itkvtkglue.svg
     :target: https://ci.appveyor.com/project/itkrobot/itkvtkglue
+
+=========== =========== ===========
+   Linux      macOS       Windows
+=========== =========== ===========
+|CircleCI|  |TravisCI|  |AppVeyor|
+=========== =========== ===========
 
 This module contains classes that bridge and ITK and VTK image processing and visualization pipeline.
 
