@@ -42,8 +42,9 @@ setup(
         ],
     license='Apache',
     keywords='ITK InsightToolkit',
-    url=r'https://itk.org/',
+    url=r'https://www.itk.org/',
     install_requires=[
-        r'itk'
+        r'itk>=5.0b01',
+        r'vtk==8.1.*'
     ]
     )

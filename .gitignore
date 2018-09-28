@@ -2,3 +2,12 @@ ITKPythonBuilds-*
 VTKPythonBuilds-*
 ITKPythonPackage
 VTKPythonPackage
+ITK-cp*
+VTK-cp*
+dist/
+doxygen-1.8.11.linux.bin.tar.gz
+itk_vtkglue.egg-info/
+standalone-x64-build/
+tools/
+zstd-1.2.0-linux.tar
+zstd-1.2.0-linux/

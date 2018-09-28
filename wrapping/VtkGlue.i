@@ -23,6 +23,23 @@
 
 %}
 
+
+// We need to ensure that the VTK libraries are loaded, which are used by this
+// module, but with weak linking. Since VTK does not use lazy loading yet,
+// just 'import vtk' should do the trick.
+// Then, dlopen the required libraries with RTLD_GLOBAL
+%pythonbegin %{
+import vtk
+import ctypes
+_vtk_major_version = str(vtk.vtkVersion.GetVTKMajorVersion())
+_vtk_minor_version = str(vtk.vtkVersion.GetVTKMinorVersion())
+_vtkIOlib = 'libvtkIO-' + _vtk_major_version + '.' + _vtk_minor_version + '.so.1'
+ctypes.CDLL(_vtkIOlib, ctypes.RTLD_GLOBAL)
+import sys
+_vtkWrappinglib = 'libvtkWrappingPython' + str(sys.version_info[0]) + str(sys.version_info[1]) + 'Core-' + _vtk_major_version + '.'  + _vtk_minor_version + '.so.1'
+ctypes.CDLL(_vtkWrappinglib, ctypes.RTLD_GLOBAL)
+%}
+
 #ifdef SWIGTCL
 %{
 #include "vtkTclUtil.h"

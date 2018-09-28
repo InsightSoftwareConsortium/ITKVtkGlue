@@ -50,19 +50,28 @@ for PYBIN in "${PYBINARIES[@]}"; do
   if [[ ! -d ${itk_source_dir} ]]; then
     echo 'ITK source tree not available!' 1>&2
     exit 1
-
   fi
+
   vtk_build_dir=/work/VTK-$(basename $(dirname ${PYBIN}))-manylinux1_${ARCH}
   ln -fs /VTKPythonPackage/VTK-$(basename $(dirname ${PYBIN}))-manylinux1_${ARCH} $vtk_build_dir
   if [[ ! -d ${vtk_build_dir} ]]; then
     echo 'VTK build tree not available!' 1>&2
     exit 1
   fi
+  itk_source_dir=/work/standalone-${ARCH}-build/VTK-source
+  ln -fs /VTKPythonPackage/standalone-${ARCH}-build/VTK-source /work/standalone-${ARCH}-build/VTK-source
+  if [[ ! -d ${itk_source_dir} ]]; then
+    echo 'VTK source tree not available!' 1>&2
+    exit 1
+  fi
 
-  ${PYBIN}/python setup.py bdist_wheel --build-type MinSizeRel -G Ninja -- \
+  ${PYBIN}/python -m pip install --upgrade scikit-build
+
+  ${PYBIN}/python setup.py bdist_wheel --build-type MinSizeRel -- \
     -Wno-dev \
     -DITK_DIR:PATH=${itk_build_dir} \
     -DVTK_DIR:PATH=${vtk_build_dir} \
+    -DWRAP_ITK_INSTALL_COMPONENT_IDENTIFIER:STRING=PythonWheel \
     -DCMAKE_CXX_COMPILER_TARGET:STRING=$(uname -p)-linux-gnu \
     -DBUILD_TESTING:BOOL=OFF \
     -DITK_WRAP_PYTHON:BOOL=ON \
@@ -73,25 +82,6 @@ for PYBIN in "${PYBINARIES[@]}"; do
     -DPYTHON_LIBRARY:FILEPATH=${PYTHON_LIBRARY} \
     || exit 1
   ${PYBIN}/python setup.py clean
-
-  #cd /work/build
-  #rm -rf *
-  #cmake \
-    #-Wno-dev \
-    #-G Ninja \
-    #-DCMAKE_BUILD_TYPE:STRING=MinSizeRel \
-    #-DITK_DIR:PATH=${itk_build_dir} \
-    #-DVTK_DIR:PATH=${vtk_build_dir} \
-    #-DCMAKE_CXX_COMPILER_TARGET:STRING=$(uname -p)-linux-gnu \
-    #-DBUILD_TESTING:BOOL=ON \
-    #-DITK_WRAP_PYTHON:BOOL=ON \
-    #-DITK_USE_SYSTEM_SWIG:BOOL=ON \
-    #-DSWIG_EXECUTABLE:FILEPATH=${itk_build_dir}/Wrapping/Generators/SwigInterface/swig/bin/swig \
-    #-DPYTHON_EXECUTABLE:FILEPATH=${PYTHON_EXECUTABLE} \
-    #-DPYTHON_INCLUDE_DIR:PATH=${PYTHON_INCLUDE_DIR} \
-    #-DPYTHON_LIBRARY:FILEPATH=${PYTHON_LIBRARY} \
-    #..
-  #ninja
 done
 
 # This step will fixup the wheel switching from 'linux' to 'manylinux1' tag
