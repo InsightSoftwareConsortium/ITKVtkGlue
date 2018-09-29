@@ -1,4 +1,4 @@
-ITKVtkGlue
+ITKVTKGlue
 ==========
 
 .. |CircleCI| image:: https://circleci.com/gh/InsightSoftwareConsortium/ITKVTKGlue.svg?style=shield
