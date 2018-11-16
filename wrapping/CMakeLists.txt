@@ -23,13 +23,15 @@ itk_wrap_module(ITKVtkGlue)
 %pythonbegin %{
 import vtk
 import ctypes
-_vtk_major_version = str(vtk.vtkVersion.GetVTKMajorVersion())
-_vtk_minor_version = str(vtk.vtkVersion.GetVTKMinorVersion())
-_vtkIOlib = 'libvtkIO-' + _vtk_major_version + '.' + _vtk_minor_version + '.so.1'
-ctypes.CDLL(_vtkIOlib, ctypes.RTLD_GLOBAL)
-import sys
-_vtkWrappinglib = 'libvtkWrappingPython' + str(sys.version_info[0]) + str(sys.version_info[1]) + 'Core-' + _vtk_major_version + '.'  + _vtk_minor_version + '.so.1'
-ctypes.CDLL(_vtkWrappinglib, ctypes.RTLD_GLOBAL)
+import os
+if os.name != 'nt':
+    _vtk_major_version = str(vtk.vtkVersion.GetVTKMajorVersion())
+    _vtk_minor_version = str(vtk.vtkVersion.GetVTKMinorVersion())
+    _vtkIOlib = 'libvtkIO-' + _vtk_major_version + '.' + _vtk_minor_version + '.so.1'
+    ctypes.CDLL(_vtkIOlib, ctypes.RTLD_GLOBAL)
+    import sys
+    _vtkWrappinglib = 'libvtkWrappingPython' + str(sys.version_info[0]) + str(sys.version_info[1]) + 'Core-' + _vtk_major_version + '.'  + _vtk_minor_version + '.so.1'
+    ctypes.CDLL(_vtkWrappinglib, ctypes.RTLD_GLOBAL)
 %}
 %pythoncode %{
 ]=])
@@ -39,8 +41,8 @@ itk_end_wrap_module()
 if(${VTK_VERSION} VERSION_LESS 6.0.0)
   target_link_libraries_with_dynamic_lookup(ITKVtkGluePython vtkImagingPythonD vtkPythonCore)
 elseif(TARGET vtkImagingKitPythonD)
-  target_link_libraries_with_dynamic_lookup(ITKVtkGluePython vtkImagingKitPythonD)
+  target_link_libraries_with_dynamic_lookup(ITKVtkGluePython vtkImagingKitPythonD vtkIO)
 else()
-  target_link_libraries_with_dynamic_lookup(ITKVtkGluePython vtkImagingCorePythonD)
+  target_link_libraries_with_dynamic_lookup(ITKVtkGluePython vtkImagingCorePythonD vtkIO)
 endif()
 

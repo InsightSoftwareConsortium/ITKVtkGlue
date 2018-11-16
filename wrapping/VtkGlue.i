@@ -31,13 +31,15 @@
 %pythonbegin %{
 import vtk
 import ctypes
-_vtk_major_version = str(vtk.vtkVersion.GetVTKMajorVersion())
-_vtk_minor_version = str(vtk.vtkVersion.GetVTKMinorVersion())
-_vtkIOlib = 'libvtkIO-' + _vtk_major_version + '.' + _vtk_minor_version + '.so.1'
-ctypes.CDLL(_vtkIOlib, ctypes.RTLD_GLOBAL)
-import sys
-_vtkWrappinglib = 'libvtkWrappingPython' + str(sys.version_info[0]) + str(sys.version_info[1]) + 'Core-' + _vtk_major_version + '.'  + _vtk_minor_version + '.so.1'
-ctypes.CDLL(_vtkWrappinglib, ctypes.RTLD_GLOBAL)
+import os
+if os.name != 'nt':
+  _vtk_major_version = str(vtk.vtkVersion.GetVTKMajorVersion())
+  _vtk_minor_version = str(vtk.vtkVersion.GetVTKMinorVersion())
+  _vtkIOlib = 'libvtkIO-' + _vtk_major_version + '.' + _vtk_minor_version + '.so.1'
+  ctypes.CDLL(_vtkIOlib, ctypes.RTLD_GLOBAL)
+  import sys
+  _vtkWrappinglib = 'libvtkWrappingPython' + str(sys.version_info[0]) + str(sys.version_info[1]) + 'Core-' + _vtk_major_version + '.'  + _vtk_minor_version + '.so.1'
+  ctypes.CDLL(_vtkWrappinglib, ctypes.RTLD_GLOBAL)
 %}
 
 #ifdef SWIGTCL

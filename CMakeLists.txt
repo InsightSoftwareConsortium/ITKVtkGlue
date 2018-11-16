@@ -1,9 +1,11 @@
 cmake_minimum_required(VERSION 2.8.12)
+project(ITKVtkGlue)
+
 if(NOT ITK_SOURCE_DIR)
   include(itk-module-init.cmake)
   find_package(ITK REQUIRED)
 endif()
-project(ITKVtkGlue)
+
 
 set(ITKVtkGlue_LIBRARIES ITKVtkGlue)
 
@@ -122,7 +124,7 @@ else()
 
   # An artifact of the VTKPythonPackage build configuration
   list(FILTER ITKVtkGlue_VTK_LIBRARIES EXCLUDE REGEX
-    "libpython-not-needed-symbols")
+    \"libpython-not-needed-symbols\")
 endif()
 ")
 set(ITKVtkGlue_EXPORT_CODE_BUILD "
@@ -164,7 +166,7 @@ if(NOT ITK_BINARY_DIR)
 
   # An artifact of the VTKPythonPackage build configuration
   list(FILTER ITKVtkGlue_VTK_LIBRARIES EXCLUDE REGEX
-    "libpython-not-needed-symbols")
+    \"libpython-not-needed-symbols\")
 endif()
 ")
 
