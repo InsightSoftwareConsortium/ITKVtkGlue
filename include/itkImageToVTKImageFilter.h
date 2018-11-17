@@ -46,11 +46,13 @@ template <typename TInputImage >
 class ITK_TEMPLATE_EXPORT ImageToVTKImageFilter : public ProcessObject
 {
 public:
-  /** Standard class typedefs. */
-  typedef ImageToVTKImageFilter     Self;
-  typedef ProcessObject             Superclass;
-  typedef SmartPointer<Self>        Pointer;
-  typedef SmartPointer<const Self>  ConstPointer;
+  ITK_DISALLOW_COPY_AND_ASSIGN(ImageToVTKImageFilter);
+
+  /** Standard class type aliases. */
+  using Self = ImageToVTKImageFilter;
+  using Superclass = ProcessObject;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -58,12 +60,12 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro(ImageToVTKImageFilter, ProcessObject);
 
-  /** Some typedefs. */
-  typedef TInputImage                            InputImageType;
-  typedef typename InputImageType::ConstPointer  InputImagePointer;
+  /** Some type alias. */
+  using InputImageType = TInputImage;
+  using InputImagePointer = typename InputImageType::ConstPointer;
 
-  typedef VTKImageExport< InputImageType>        ExporterFilterType;
-  typedef typename ExporterFilterType::Pointer   ExporterFilterPointer;
+  using ExporterFilterType = VTKImageExport< InputImageType>;
+  using ExporterFilterPointer = typename ExporterFilterType::Pointer;
 
   /** Get the output in the form of a vtkImage.
       This call is delegated to the internal vtkImageImporter filter  */
@@ -85,18 +87,16 @@ public:
   ExporterFilterType * GetExporter() const;
 
   /** This call delegates the update to the importer */
-  virtual void Update() ITK_OVERRIDE;
+  void Update() override;
 
   /** This call delegates the update to the importer */
-  virtual void UpdateLargestPossibleRegion() ITK_OVERRIDE;
+  void UpdateLargestPossibleRegion() override;
 
 protected:
   ImageToVTKImageFilter();
-  virtual ~ImageToVTKImageFilter();
+  ~ImageToVTKImageFilter() override;
 
 private:
-  ITK_DISALLOW_COPY_AND_ASSIGN(ImageToVTKImageFilter);
-
   ExporterFilterPointer       m_Exporter;
   vtkImageImport *            m_Importer;
 };

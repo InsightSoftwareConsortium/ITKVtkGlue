@@ -29,6 +29,10 @@ if os.name != 'nt':
     _vtk_minor_version = str(vtk.vtkVersion.GetVTKMinorVersion())
     _vtkIOlib = 'libvtkIO-' + _vtk_major_version + '.' + _vtk_minor_version + '.so.1'
     ctypes.CDLL(_vtkIOlib, ctypes.RTLD_GLOBAL)
+    _vtkInteractionlib = 'libvtkInteraction-' + _vtk_major_version + '.' + _vtk_minor_version + '.so.1'
+    ctypes.CDLL(_vtkInteractionlib, ctypes.RTLD_GLOBAL)
+    _vtkOpenGLlib = 'libvtkOpenGL-' + _vtk_major_version + '.' + _vtk_minor_version + '.so.1'
+    ctypes.CDLL(_vtkOpenGLlib, ctypes.RTLD_GLOBAL)
     import sys
     _vtkWrappinglib = 'libvtkWrappingPython' + str(sys.version_info[0]) + str(sys.version_info[1]) + 'Core-' + _vtk_major_version + '.'  + _vtk_minor_version + '.so.1'
     ctypes.CDLL(_vtkWrappinglib, ctypes.RTLD_GLOBAL)
@@ -41,8 +45,10 @@ itk_end_wrap_module()
 if(${VTK_VERSION} VERSION_LESS 6.0.0)
   target_link_libraries_with_dynamic_lookup(ITKVtkGluePython vtkImagingPythonD vtkPythonCore)
 elseif(TARGET vtkImagingKitPythonD)
-  target_link_libraries_with_dynamic_lookup(ITKVtkGluePython vtkImagingKitPythonD vtkIO)
+  target_link_libraries_with_dynamic_lookup(ITKVtkGluePython
+    vtkImagingKitPythonD vtkIO vtkInteraction vtkRenderingOpenGL2)
 else()
-  target_link_libraries_with_dynamic_lookup(ITKVtkGluePython vtkImagingCorePythonD vtkIO)
+  target_link_libraries_with_dynamic_lookup(ITKVtkGluePython
+    vtkImagingCorePythonD vtkIO vtkInteraction vtkRenderingOpenGL2)
 endif()
 
