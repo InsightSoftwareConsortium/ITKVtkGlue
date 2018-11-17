@@ -39,7 +39,6 @@ def build_wheels(py_envs=DEFAULT_PY_ENVS):
             check_call([pip, "install", "ninja"])
 
             build_type = "Release"
-            source_path = ROOT_DIR
             itk_build_path = os.path.abspath("%s/ITK-win_%s" % (IPP_DIR, py_env))
             print('ITKDIR: %s' % itk_build_path)
             vtk_build_path = os.path.abspath("%s/VTK-win_%s" % (VPP_DIR, py_env))
@@ -62,7 +61,26 @@ def build_wheels(py_envs=DEFAULT_PY_ENVS):
                 "-DPYTHON_LIBRARY:FILEPATH=%s" % python_library
             ])
             # Cleanup
-            # check_call([python_executable, "setup.py", "clean"])
+            check_call([python_executable, "setup.py", "clean"])
+
+def test_wheels(python_env):
+    (
+        python_executable,
+        python_include_dir,
+        python_library,
+        pip,
+        ninja_executable,
+        path
+    ) = venv_paths(python_env)
+    check_call([pip, 'install', '--pre', 'itk', 'vtk'])
+    check_call([pip, 'install', 'itk-vtkglue', '--no-cache-dir', '--no-index',
+        '-f', 'dist'])
+    print('Wheel successfully installed.')
+    check_call([
+        python_executable,
+        os.path.join(ROOT_DIR, "test/itkImageToVTKImageFilterTest.py")
+    ])
+    print('Test passed.')
 
 def main():
     parser = argparse.ArgumentParser(description='Driver script to build ITKVtkGlue Python wheels.')
@@ -71,6 +89,8 @@ def main():
     args = parser.parse_args()
 
     build_wheels(py_envs=args.py_envs)
+    for py_env in args.py_envs:
+        test_wheels(py_env)
 
 if __name__ == '__main__':
     main()

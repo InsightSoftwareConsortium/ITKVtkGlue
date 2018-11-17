@@ -6,8 +6,10 @@ version: "0.0.1.{build}"
 
 install:
 
-  - curl -L https://rawgit.com/InsightSoftwareConsortium/ITKPythonPackage/master/scripts/windows-download-cache-and-build-module-wheels.ps1 -O
-  - ps: .\windows-download-cache-and-build-module-wheels.ps1
+  - curl -L https://raw.githubusercontent.com/InsightSoftwareConsortium/ITKPythonPackage/master/scripts/windows-download-cache-and-build-module-wheels.ps1 -O
+  - ps: .\scripts\windows-download-cache.ps1
+  - C:\Python35-x64\python.exe .\scripts\windows_build_module_wheels.py --py-envs 35-x64 36-x64
+
 
 build: off
 
