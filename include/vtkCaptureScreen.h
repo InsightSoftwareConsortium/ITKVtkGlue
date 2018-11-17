@@ -28,12 +28,12 @@ template < typename TImageWriter >
 class vtkCaptureScreen
   {
 public:
-  typedef TImageWriter ImageWriterType;
+  using ImageWriterType = TImageWriter;
 
   vtkCaptureScreen( vtkRenderWindow* iRenderer ) : m_Renderer ( iRenderer )
     {}
 
-  vtkCaptureScreen() : m_Renderer( ITK_NULLPTR )
+  vtkCaptureScreen() : m_Renderer( nullptr )
     {}
 
   ~vtkCaptureScreen( )
