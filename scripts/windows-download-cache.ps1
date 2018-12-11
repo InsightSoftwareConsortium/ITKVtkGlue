@@ -10,7 +10,7 @@ sz x ITKPythonBuilds-windows.zip -oC:\P -aoa -r
 if (-not (Test-Path env:VTK_PACKAGE_VERSION)) { $env:VTK_PACKAGE_VERSION = 'v8.1.1' }
 Invoke-WebRequest -Uri "https://github.com/KitwareMedical/VTKPythonBuilds/releases/download/$env:VTK_PACKAGE_VERSION/VTKPythonBuilds-windows.zip" -OutFile "VTKPythonBuilds-windows.zip"
 sz x VTKPythonBuilds-windows.zip -oC:\P -aoa -r
-Invoke-WebRequest -Uri "http://ftp.stack.nl/pub/users/dimitri/doxygen-1.8.11.windows.bin.zip" -OutFile "doxygen-1.8.11.windows.bin.zip"
+Invoke-WebRequest -Uri "https://data.kitware.com/api/v1/file/5c0ad59d8d777f2179dd3e9c/download" -OutFile "doxygen-1.8.11.windows.bin.zip"
 sz x doxygen-1.8.11.windows.bin.zip -oC:\P\doxygen -aoa -r
 Invoke-WebRequest -Uri "https://data.kitware.com/api/v1/file/5bbf87ba8d777f06b91f27d6/download/grep-win.zip" -OutFile "grep-win.zip"
 sz x grep-win.zip -oC:\P\grep -aoa -r
