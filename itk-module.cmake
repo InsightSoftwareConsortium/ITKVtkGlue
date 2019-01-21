@@ -17,6 +17,7 @@ itk_module(ITKVtkGlue
     ITKLabelMap
     ITKImageFusion
     ITKStatistics
+    ITKIOMeshVTK
   EXCLUDE_FROM_DEFAULT
   DESCRIPTION
     "${DOCUMENTATION}")
