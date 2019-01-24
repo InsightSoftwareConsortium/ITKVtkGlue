@@ -53,6 +53,7 @@ else()
     vtkInteractionStyle
     vtkInteractionWidgets
     vtkIOImage
+    vtkIOLegacy
     vtkImagingSources
     ${_wrap_module}
     )
@@ -118,6 +119,7 @@ else()
     vtkInteractionStyle
     vtkInteractionWidgets
     vtkIOImage
+    vtkIOLegacy
     vtkImagingSources
     ${_wrap_module}
     )
@@ -160,6 +162,7 @@ if(NOT ITK_BINARY_DIR)
       vtkInteractionStyle
       vtkInteractionWidgets
       vtkIOImage
+      vtkIOLegacy
       vtkImagingSources
       ${_wrap_module}
       )
