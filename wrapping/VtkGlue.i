@@ -20,7 +20,7 @@
 #include "itkVTKImageExport.h"
 #include "itkVTKImageImport.h"
 #include "vtkImageData.h"
-
+#include "vtkRenderWindowInteractor.h"
 %}
 
 
@@ -91,6 +91,12 @@ if os.name != 'nt':
 %typemap(in) vtkImageData* {
   $1 = NULL;
   $1 = (vtkImageData*) vtkPythonUtil::GetPointerFromObject ( $input, "vtkImageData" );
+  if ( $1 == NULL ) { SWIG_fail; }
+}
+
+%typemap(in) vtkRenderWindowInteractor* {
+  $1 = NULL;
+  $1 = (vtkRenderWindowInteractor*) vtkPythonUtil::GetPointerFromObject ( $input, "vtkRenderWindowInteractor" );
   if ( $1 == NULL ) { SWIG_fail; }
 }
 

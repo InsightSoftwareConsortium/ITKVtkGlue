@@ -17,19 +17,17 @@
  *=========================================================================*/
 #ifndef itkViewImage_hxx
 #define itkViewImage_hxx
-#include "vtkSmartPointer.h"
+
 #include "vtkRenderWindow.h"
-#include "vtkRenderWindowInteractor.h"
+
 #include "vtkInteractorStyleRubberBand3D.h"
 #include "vtkRenderer.h"
 #include "vtkCamera.h"
-#include "vtkImageMapper.h"
-#include "vtkImagePlaneWidget.h"
 
 #include "itkImage.h"
 #include "itkImageToVTKImageFilter.h"
 #include "itkStatisticsImageFilter.h"
-#include "itkFixedArray.h"
+
 #include "itkViewImage.h"
 
 namespace itk
@@ -38,29 +36,93 @@ namespace itk
 template< typename TImage >
 void
 ViewImage< TImage >
-::View( const ImageType* img,
+::View( const ImageType* input,
         const std::string& winTitle,
         size_t winWidth,
-        size_t winHeight )
+        size_t winHeight)
 {
+    ViewImage<ImageType>::Pointer view = ViewImage<ImageType>::New();
+    view->SetInput(input);
+    view->SetWindowTitle(winTitle);
+    view->SetWindowWidth(winWidth);
+    view->SetWindowHeight(winHeight);
+    view->Update();
+}
+
+//---------------------------------------------------------
+template< typename TImage >
+ViewImage< TImage >
+::ViewImage() = default;
+
+//---------------------------------------------------------
+template< typename TImage >
+ViewImage< TImage >
+::~ViewImage() = default;
+
+//---------------------------------------------------------
+template< typename TImage >
+void
+ViewImage< TImage >
+::SetInput(const ImageType *input)
+{
+  // ProcessObject is not const_correct so this cast is required here.
+  this->ProcessObject::SetNthInput( 0,
+                                    const_cast< ImageType * >( input ) );
+}
+
+//---------------------------------------------------------
+template< typename TImage >
+const typename ViewImage< TImage >::ImageType *
+ViewImage< TImage >
+::GetInput()
+{
+  return itkDynamicCastInDebugMode< ImageType * >( this->GetPrimaryInput() );
+}
+
+//---------------------------------------------------------
+template< typename TImage >
+const typename ViewImage< TImage >::ImageType *
+ViewImage< TImage >
+::GetInput(unsigned int idx)
+{
+  return itkDynamicCastInDebugMode< ImageType * >( this->ProcessObject::GetInput(idx) );
+}
+
+
+//---------------------------------------------------------
+template< typename TImage >
+void
+ViewImage< TImage >
+::GenerateData()
+{
+  const ImageType *input = this->GetInput();
   using ConnectorType = ImageToVTKImageFilter< ImageType >;
   auto connector = ConnectorType::New();
-  connector->SetInput(img);
+  connector->SetInput(input);
   connector->Update();
   connector->UpdateLargestPossibleRegion();
 
   // Setup renderers
   vtkSmartPointer< vtkRenderer > renderer = vtkSmartPointer< vtkRenderer >::New();
 
-  // Setup render window
-  vtkSmartPointer< vtkRenderWindow > renderWindow = vtkSmartPointer< vtkRenderWindow >::New();
-  renderWindow->SetWindowName(winTitle.c_str());
-  renderWindow->SetSize(winWidth, winHeight);
+  vtkSmartPointer< vtkRenderWindow > renderWindow;
+  // Setup render window interactor
+  vtkSmartPointer< vtkRenderWindowInteractor > renderWindowInteractor;
+  if(!m_RenderWindowInteractor)
+  {
+    // Setup render window
+    renderWindow = vtkSmartPointer< vtkRenderWindow >::New();
+    renderWindowInteractor = vtkSmartPointer< vtkRenderWindowInteractor >::New();
+  }
+  else
+  {
+    renderWindowInteractor = m_RenderWindowInteractor;
+    renderWindow = renderWindowInteractor->GetRenderWindow();
+  }
+  renderWindow->SetWindowName(m_WindowTitle.c_str());
+  renderWindow->SetSize(m_WindowWidth, m_WindowHeight);
   renderWindow->AddRenderer(renderer);
 
-  // Setup render window interactor
-  vtkSmartPointer< vtkRenderWindowInteractor > renderWindowInteractor =
-    vtkSmartPointer< vtkRenderWindowInteractor >::New();
   vtkSmartPointer< vtkInteractorStyleRubberBand3D > style =
     vtkSmartPointer< vtkInteractorStyleRubberBand3D >::New();
   renderWindowInteractor->SetInteractorStyle(style);
@@ -71,7 +133,7 @@ ViewImage< TImage >
   // Prepare for slices.
   using FilterType = StatisticsImageFilter< ImageType >;
   auto filter = FilterType::New();
-  filter->SetInput(img);
+  filter->SetInput(input);
   filter->Update();
   filter->UpdateLargestPossibleRegion();
   double minIntensity = filter->GetMinimum();
@@ -79,28 +141,27 @@ ViewImage< TImage >
   double window = maxIntensity - minIntensity;
   double level  = minIntensity + window / 2;
   /** SLICES */
-  FixedArray< vtkSmartPointer< vtkImagePlaneWidget >, 3 > slicePlanes;
   for ( unsigned i = 0; i < 3; ++i )
     {
-    slicePlanes[i] = vtkSmartPointer< vtkImagePlaneWidget >::New();
-    slicePlanes[i]->SetResliceInterpolateToCubic();
-    slicePlanes[i]->DisplayTextOn();
-    slicePlanes[i]->SetInteractor(renderWindowInteractor);
-    slicePlanes[i]->PlaceWidget();
-    slicePlanes[i]->SetSliceIndex(0);
-    slicePlanes[i]->SetMarginSizeX(0);
-    slicePlanes[i]->SetMarginSizeY(0);
-    slicePlanes[i]->SetRightButtonAction(
+    m_SlicePlanes[i] = vtkSmartPointer< vtkImagePlaneWidget >::New();
+    m_SlicePlanes[i]->SetResliceInterpolateToCubic();
+    m_SlicePlanes[i]->DisplayTextOn();
+    m_SlicePlanes[i]->SetInteractor(renderWindowInteractor);
+    m_SlicePlanes[i]->PlaceWidget();
+    m_SlicePlanes[i]->SetSliceIndex(0);
+    m_SlicePlanes[i]->SetMarginSizeX(0);
+    m_SlicePlanes[i]->SetMarginSizeY(0);
+    m_SlicePlanes[i]->SetRightButtonAction(
       vtkImagePlaneWidget::VTK_SLICE_MOTION_ACTION);
-    slicePlanes[i]->SetMiddleButtonAction(
+    m_SlicePlanes[i]->SetMiddleButtonAction(
       vtkImagePlaneWidget::VTK_WINDOW_LEVEL_ACTION);
-    slicePlanes[i]->TextureInterpolateOff();
+    m_SlicePlanes[i]->TextureInterpolateOff();
 
-    slicePlanes[i]->SetInputData(connector->GetOutput());
-    slicePlanes[i]->SetPlaneOrientation(i);
-    slicePlanes[i]->UpdatePlacement();
-    slicePlanes[i]->SetWindowLevel(window, level);
-    slicePlanes[i]->On();
+    m_SlicePlanes[i]->SetInputData(connector->GetOutput());
+    m_SlicePlanes[i]->SetPlaneOrientation(i);
+    m_SlicePlanes[i]->UpdatePlacement();
+    m_SlicePlanes[i]->SetWindowLevel(window, level);
+    m_SlicePlanes[i]->On();
     }
   // Flip camera because VTK-ITK different corner for origin.
   double pos[3];
@@ -120,5 +181,60 @@ ViewImage< TImage >
   renderWindowInteractor->Initialize();
   renderWindowInteractor->Start();
 }
+
+//---------------------------------------------------------
+template< typename TImage >
+void
+ViewImage< TImage >
+::PrintSelf(std::ostream & os, Indent indent) const
+{
+  Superclass::PrintSelf(os, indent);
+
+  os << indent << "Window Title: "
+     << ( m_WindowTitle.data() ? m_WindowTitle.data() : "(none)" ) << "\n";
+
+  os << indent << "Window Width: " << m_WindowWidth << "\n";
+  os << indent << "Window Height: " << m_WindowHeight << "\n";
+
+  os << indent << "Render Window Interactor: ";
+  if ( m_RenderWindowInteractor.GetPointer() == nullptr )
+    {
+    os << "(none)\n";
+    }
+  else
+    {
+    os << m_RenderWindowInteractor << "\n";
+    }
+
+  for(int i = 0; i <m_SlicePlanes.Size(); i++)
+    {
+    os << indent << "Slice Plane " << i << ":";
+  if ( m_SlicePlanes[i].GetPointer() == nullptr )
+    {
+    os << "(none)\n";
+    }
+  else
+    {
+    os << m_SlicePlanes[i] << "\n";
+    }
+  }
+}
+
+template< typename TImage >
+void
+ViewImage< TImage >
+::Update()
+{
+    this->GenerateData();
+}
+
+template< typename TImage >
+void
+ViewImage< TImage >
+::UpdateLargestPossibleRegion()
+{
+    this->GenerateData();
+}
+
 }// namespace itk
 #endif
