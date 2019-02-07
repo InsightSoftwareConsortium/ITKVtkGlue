@@ -10,6 +10,7 @@ itk_module(ITKVtkGlue
     ITKCommon
     ITKVTK
   COMPILE_DEPENDS
+    ITKSpatialObjects
     ITKImageIntensity
   TEST_DEPENDS
     ITKTestKernel
