@@ -1,5 +1,6 @@
 set(ITKVtkGlue_SRCS
   itkVTKImageExportBase.cxx
+  vtkPolyDataBaselineComparison.cxx
   )
 if(NOT VTK_RENDERING_BACKEND STREQUAL "None")
   list(APPEND ITKVtkGlue_SRCS QuickView.cxx)

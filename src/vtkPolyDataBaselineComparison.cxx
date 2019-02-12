@@ -15,10 +15,7 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-
-#include "vtkPolyData.h"
-#include <iostream>
-#include "itkMath.h"
+#include "vtkPolyDataBaselineComparison.h"
 
 // Compare two vtkPolyData instances and return true if they are roughly the
 // same.
@@ -44,11 +41,11 @@ vtkPolyDataBaselineComparison( vtkPolyData * input, vtkPolyData * baseline )
       baseline->GetPoint( pointId, baselinePoint );
       for( unsigned int index = 0; index < 3; ++index )
         {
-        if( ! itk::Math::FloatAlmostEqual( inputPoint[index], baselinePoint[index] ) )
+        if( ! itk::Math::FloatAlmostEqual( inputPoint[index], baselinePoint[index], 10, 1e-5 ) )
           {
           std::cerr << "Point difference: Id: " << pointId
                     << " Index: " << index
-                    << " Value: " << inputPoint[index] << " " << baselinePoint[index] << std::endl;
+                    << " Value: " << inputPoint[index] << " versus " << baselinePoint[index] << std::endl;
           same = false;
           }
         }
