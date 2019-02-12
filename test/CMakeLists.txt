@@ -6,6 +6,7 @@ set(ITKVtkGlueTests
   itkVTKImageToImageFilterTest.cxx
   itkMeshToVTKUnstructuredGridFilterTest.cxx
   itkBoxSpatialObjectToVTKPolyDataFilterTest.cxx
+  itkTubeSpatialObjectToVTKPolyDataFilterTest.cxx
   )
 if(NOT VTK_RENDERING_BACKEND STREQUAL "None")
   # ### runViewImage ###
@@ -47,6 +48,11 @@ itk_add_test(NAME itkMeshToVTKUnstructuredGridFilterTest
 itk_add_test(NAME itkBoxSpatialObjectToVTKPolyDataFilterTest
   COMMAND ITKVtkGlueTestDriver
   itkBoxSpatialObjectToVTKPolyDataFilterTest ${ITK_TEST_OUTPUT_DIR}/BoxSpatialObject.vtk DATA{Baseline/BoxSpatialObject.vtk}
+  )
+
+itk_add_test(NAME itkTubeSpatialObjectToVTKPolyDataFilterTest
+  COMMAND ITKVtkGlueTestDriver
+  itkTubeSpatialObjectToVTKPolyDataFilterTest DATA{Input/tube.tre} ${ITK_TEST_OUTPUT_DIR}/TubeSpatialObject.vtk DATA{Baseline/TubeSpatialObject.vtk}
   )
 
 if(NOT VTK_RENDERING_BACKEND STREQUAL "None")
