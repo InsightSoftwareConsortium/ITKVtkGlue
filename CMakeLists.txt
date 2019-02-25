@@ -64,9 +64,14 @@ else()
     ${_wrap_module}
     )
 endif()
-# An artifact of the VTKPythonPackage build configuration
+# Artifacts of the VTKPythonPackage build configuration
 list(FILTER ITKVtkGlue_VTK_LIBRARIES EXCLUDE REGEX
   "libpython-not-needed-symbols")
+list(FILTER ITKVtkGlue_VTK_LIBRARIES EXCLUDE REGEX
+  "optimized")
+list(FILTER ITKVtkGlue_VTK_LIBRARIES EXCLUDE REGEX
+  "debug")
+
 
 # The VTK DICOMParser and vtkmetaio includes conflict with the ITK
 # versions. Here we remove them from the include directories.
@@ -137,9 +142,13 @@ else()
 
   set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS \${ITKVtkGlue_VTK_DEFINITIONS})
 
-  # An artifact of the VTKPythonPackage build configuration
+  # Artifacts of the VTKPythonPackage build configuration
   list(FILTER ITKVtkGlue_VTK_LIBRARIES EXCLUDE REGEX
     \"libpython-not-needed-symbols\")
+  list(FILTER ITKVtkGlue_VTK_LIBRARIES EXCLUDE REGEX
+    \"optimized\")
+  list(FILTER ITKVtkGlue_VTK_LIBRARIES EXCLUDE REGEX
+    \"debug\")
 endif()
 ")
 set(ITKVtkGlue_EXPORT_CODE_BUILD "
@@ -186,9 +195,13 @@ if(NOT ITK_BINARY_DIR)
     set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS \${ITKVtkGlue_VTK_DEFINITIONS})
   endif()
 
-  # An artifact of the VTKPythonPackage build configuration
+  # Artifacts of the VTKPythonPackage build configuration
   list(FILTER ITKVtkGlue_VTK_LIBRARIES EXCLUDE REGEX
     \"libpython-not-needed-symbols\")
+  list(FILTER ITKVtkGlue_VTK_LIBRARIES EXCLUDE REGEX
+    \"optimized\")
+  list(FILTER ITKVtkGlue_VTK_LIBRARIES EXCLUDE REGEX
+    \"debug\")
 endif()
 ")
 
