@@ -120,13 +120,13 @@ public:
     m_ViewPortSize = 300;
   }
   /** Add an image to be rendered. */
-  template<typename TImage> void AddImage(
+  template<typename TImage> void ITKVtkGlue_EXPORT AddImage(
     TImage *,
     bool FlipVertical=true,
     std::string Description="");
 
   /** Add an RGB image to be rendered */
-  template<typename TImage> void AddRGBImage(
+  template<typename TImage> void ITKVtkGlue_EXPORT AddRGBImage(
     TImage *,
     bool FlipVertical=true,
     std::string Description="");

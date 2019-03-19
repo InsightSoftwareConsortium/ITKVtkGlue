@@ -24,39 +24,58 @@ endif()
 CreateTestDriver(ITKVtkGlue "${ITKVtkGlue-Test_LIBRARIES}" "${ITKVtkGlueTests}")
 target_link_libraries_with_dynamic_lookup(ITKVtkGlueTestDriver ${ITKVtkGlue_VTK_LIBRARIES})
 
-itk_add_test(NAME itkImageToVTKImageFilterTest
+
+function(itkvtk_add_test)
+	set(options OPTIONAL )
+	set(oneValueArgs NAME)
+	set(multiValueArgs COMMAND)
+	cmake_parse_arguments(ITKVTK "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+	itk_add_test(
+	  NAME ${ITKVTK_NAME}
+	  COMMAND ${ITKVTK_COMMAND})
+	# Get VTK library (DLL for Windows) location
+	set_tests_properties(${ITKVTK_NAME} PROPERTIES
+		ENVIRONMENT PATH=$<TARGET_FILE_DIR:vtksys>)
+endfunction()
+
+itkvtk_add_test(
+  NAME itkImageToVTKImageFilterTest
   COMMAND ITKVtkGlueTestDriver
     itkImageToVTKImageFilterTest
   )
 
-itk_add_test(NAME itkImageToVTKImageFilterRGBTest
+itkvtk_add_test(
+  NAME itkImageToVTKImageFilterRGBTest
   COMMAND ITKVtkGlueTestDriver
     itkImageToVTKImageFilterRGBTest DATA{Input/VisibleWomanEyeSlice.png}
   )
 
-itk_add_test(NAME itkVTKImageToImageFilterTest
+
+itkvtk_add_test(
+  NAME itkVTKImageToImageFilterTest
   COMMAND ITKVtkGlueTestDriver
     itkVTKImageToImageFilterTest
   )
 
-itk_add_test(NAME itkMeshToVTKUnstructuredGridFilterTest
+itkvtk_add_test(
+  NAME itkMeshToVTKUnstructuredGridFilterTest
   COMMAND ITKVtkGlueTestDriver
   itkMeshToVTKUnstructuredGridFilterTest DATA{Input/cow.vtk} ${ITK_TEST_OUTPUT_DIR}/cow_converted.vtk DATA{Input/cow.vtk}
   )
 
-itk_add_test(NAME itkBoxSpatialObjectToVTKPolyDataFilterTest
+itkvtk_add_test(NAME itkBoxSpatialObjectToVTKPolyDataFilterTest
   COMMAND ITKVtkGlueTestDriver
   itkBoxSpatialObjectToVTKPolyDataFilterTest ${ITK_TEST_OUTPUT_DIR}/BoxSpatialObject.vtk DATA{Baseline/BoxSpatialObject.vtk}
   )
 
 if(NOT VTK_RENDERING_BACKEND STREQUAL "None")
-  itk_add_test(NAME itkVtkMedianImageFilterTest
+  itkvtk_add_test(NAME itkVtkMedianImageFilterTest
     COMMAND ITKVtkGlueTestDriver
       itkVtkMedianFilterTest DATA{Input/cthead1.png} 2
     )
   set_property(TEST itkVtkMedianImageFilterTest APPEND PROPERTY LABELS REQUIRES_DISPLAY)
 
-  itk_add_test(NAME QuickViewTest
+  itkvtk_add_test(NAME QuickViewTest
     COMMAND ITKVtkGlueTestDriver
              --compare DATA{Baseline/QuickViewTest.png,:}
                        ${ITK_TEST_OUTPUT_DIR}/QuickViewTest0.png
@@ -65,7 +84,7 @@ if(NOT VTK_RENDERING_BACKEND STREQUAL "None")
     )
   set_property(TEST QuickViewTest APPEND PROPERTY LABELS REQUIRES_DISPLAY)
 
-  itk_add_test(NAME itkVtkConnectedComponentImageFilterTest
+  itkvtk_add_test(NAME itkVtkConnectedComponentImageFilterTest
     COMMAND ITKVtkGlueTestDriver
       itkVtkConnectedComponentImageFilterTest DATA{Input/cthead1.png}
     )
