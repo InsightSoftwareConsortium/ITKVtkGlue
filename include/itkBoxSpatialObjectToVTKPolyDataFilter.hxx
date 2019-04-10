@@ -83,13 +83,13 @@ BoxSpatialObjectToVTKPolyDataFilter<VDimension>
     {
       switch (dim) {
       case 0:
-        cubeSource->SetXLength(spatialObject->GetSize()[0]);
+        cubeSource->SetXLength(spatialObject->GetSizeInObjectSpace()[0]);
         break;
       case 1:
-        cubeSource->SetYLength(spatialObject->GetSize()[1]);
+        cubeSource->SetYLength(spatialObject->GetSizeInObjectSpace()[1]);
         break;
       case 2:
-        cubeSource->SetZLength(spatialObject->GetSize()[2]);
+        cubeSource->SetZLength(spatialObject->GetSizeInObjectSpace()[2]);
         break;
       default:
         itkExceptionMacro("Unsupported dimension for SpatialObject conversion.");

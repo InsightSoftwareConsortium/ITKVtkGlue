@@ -9,6 +9,7 @@ itk_module(ITKVtkGlue
   DEPENDS
     ITKCommon
     ITKVTK
+    ITKLevelSetsv4
   COMPILE_DEPENDS
     ITKSpatialObjects
     ITKImageIntensity

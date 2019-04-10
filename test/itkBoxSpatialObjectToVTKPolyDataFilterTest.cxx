@@ -45,7 +45,7 @@ int itkBoxSpatialObjectToVTKPolyDataFilterTest(int argc, char *argv[])
   size[0] = 1.3;
   size[1] = 2.2;
   size[2] = 3.8;
-  spatialObject->SetSize( size );
+  spatialObject->SetSizeInObjectSpace( size );
 
   using TransformType = SpatialObjectType::TransformType;
   TransformType * transform = spatialObject->GetModifiableObjectToWorldTransform();
@@ -59,7 +59,7 @@ int itkBoxSpatialObjectToVTKPolyDataFilterTest(int argc, char *argv[])
   translation[2] = 3.0;
   transform->Translate( translation );
 
-  spatialObject->ComputeLocalBoundingBox();
+  spatialObject->Update();
   spatialObject->Print( std::cout );
 
   using ConverterType = itk::BoxSpatialObjectToVTKPolyDataFilter< Dimension >;
