@@ -1,6 +1,7 @@
 variables:
-  ITKGitTag: v5.0rc01
-  VTKGitTag: v8.1.2
+  ITKGitTag: v5.0.0
+  VTKGitTag: v8.1.1
+  ITKPythonGitTag: v5.0.0.post1
   CMakeBuildType: Release
 
 trigger:
@@ -167,6 +168,7 @@ jobs:
 
   steps:
   - script: |
+      export ITK_PACKAGE_VERSION=$(ITKPythonGitTag)
       ./scripts/dockcross-manylinux-download-cache.sh
       ./scripts/dockcross-manylinux-build-module-wheels.sh
     displayName: 'Build Python packages'
@@ -187,6 +189,7 @@ jobs:
   steps:
   - script: |
       call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Auxiliary\Build\vcvars64.bat"
+      set ITK_PACKAGE_VERSION=$(ITKPythonGitTag)
       set CC=cl.exe
       set CXX=cl.exe
       powershell.exe -file .\scripts\windows-download-cache.ps1
