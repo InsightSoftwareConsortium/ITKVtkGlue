@@ -12,7 +12,7 @@ if [[ $# -eq 0 ]]; then
   PYBINARIES=()
   for version in "${PYBIN[@]}"; do
     # Limited by VTK Python package supported versions
-    if [[  ${version} == *"cp35"* || ${version} == *"cp36"* ]]; then
+    if [[  ${version} == *"cp35"* || ${version} == *"cp36"* || ${version} == *"cp37"* ]]; then
       PYBINARIES+=(${version})
     fi
   done
