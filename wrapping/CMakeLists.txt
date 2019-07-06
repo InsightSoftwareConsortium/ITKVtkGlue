@@ -5,7 +5,7 @@ itk_wrap_module(ITKVtkGlue)
       "Only the c++ version of the module will be built.")
   endif()
   list(APPEND WRAPPER_SWIG_LIBRARY_FILES "${CMAKE_CURRENT_SOURCE_DIR}/VtkGlue.i")
-  set(WRAPPER_LIBRARY_DEPENDS ITKCommon)
+  set(WRAPPER_LIBRARY_DEPENDS ITKCommon ITKSpatialObjects)
 
   set(WRAPPER_LIBRARY_LINK_LIBRARIES ${ITK_LIBRARIES})
 
