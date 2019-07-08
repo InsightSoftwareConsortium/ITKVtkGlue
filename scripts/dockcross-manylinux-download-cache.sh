@@ -15,6 +15,6 @@ mkdir tools
 curl https://data.kitware.com/api/v1/file/5c0aa4b18d777f2179dd0a71/download -o doxygen-1.8.11.linux.bin.tar.gz
 tar -xvzf doxygen-1.8.11.linux.bin.tar.gz -C tools
 
-curl -L https://github.com/KitwareMedical/VTKPythonBuilds/releases/download/${VTK_PACKAGE_VERSION:=v8.1.1}/VTKPythonBuilds-linux.tar.zst -O
+curl -L https://github.com/KitwareMedical/VTKPythonBuilds/releases/download/${VTK_PACKAGE_VERSION:=v8.1.2}/VTKPythonBuilds-linux.tar.zst -O
 ./zstd-1.2.0-linux/bin/unzstd VTKPythonBuilds-linux.tar.zst -o VTKPythonBuilds-linux.tar
 tar xf VTKPythonBuilds-linux.tar
