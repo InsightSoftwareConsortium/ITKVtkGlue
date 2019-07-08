@@ -13,7 +13,7 @@ except ImportError:
 
 setup(
     name='itk-vtkglue',
-    version='0.2.0',
+    version='0.2.1',
     author='Insight Software Consortium',
     author_email='itk+community@discourse.itk.org',
     packages=['itk'],
@@ -44,7 +44,7 @@ setup(
     keywords='ITK InsightToolkit',
     url=r'https://www.itk.org/',
     install_requires=[
-        r'itk>=5.0b01',
+        r'itk>=5.0.0.post1',
         r'vtk==8.1.*'
     ]
     )

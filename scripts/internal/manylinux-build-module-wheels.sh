@@ -12,7 +12,7 @@ if [[ $# -eq 0 ]]; then
   PYBINARIES=()
   for version in "${PYBIN[@]}"; do
     # Limited by VTK Python package supported versions
-    if [[  ${version} == *"cp35"* || ${version} == *"cp36"* ]]; then
+    if [[  ${version} == *"cp35"* || ${version} == *"cp36"* || ${version} == *"cp37"* ]]; then
       PYBINARIES+=(${version})
     fi
   done
@@ -45,8 +45,8 @@ for PYBIN in "${PYBINARIES[@]}"; do
     exit 1
   fi
   mkdir -p /work/standalone-${ARCH}-build
-  itk_source_dir=/work/standalone-${ARCH}-build/ITK-source
-  ln -fs /ITKPythonPackage/standalone-${ARCH}-build/ITK-source /work/standalone-${ARCH}-build/ITK-source
+  itk_source_dir=/work/standalone-${ARCH}-build/ITKs
+  ln -fs /ITKPythonPackage/standalone-${ARCH}-build/ITKs /work/standalone-${ARCH}-build/ITKs
   if [[ ! -d ${itk_source_dir} ]]; then
     echo 'ITK source tree not available!' 1>&2
     exit 1
