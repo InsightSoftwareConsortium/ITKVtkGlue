@@ -5,12 +5,12 @@ $AllProtocols = [System.Net.SecurityProtocolType]'Ssl3,Tls,Tls11,Tls12'
 set-alias sz "$env:ProgramFiles\7-Zip\7z.exe"
 if (-not (Test-Path env:APPVEYOR)) {
   $pythonArch = "64"
-  iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/scikit-build/scikit-ci-addons/master/windows/install-python.ps1')) 
+  iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/scikit-build/scikit-ci-addons/master/windows/install-python.ps1'))
 }
 if (-not (Test-Path env:ITK_PACKAGE_VERSION)) { $env:ITK_PACKAGE_VERSION = 'v5.0b01' }
 Invoke-WebRequest -Uri "https://github.com/InsightSoftwareConsortium/ITKPythonBuilds/releases/download/$env:ITK_PACKAGE_VERSION/ITKPythonBuilds-windows.zip" -OutFile "ITKPythonBuilds-windows.zip"
 sz x ITKPythonBuilds-windows.zip -oC:\P -aoa -r
-if (-not (Test-Path env:VTK_PACKAGE_VERSION)) { $env:VTK_PACKAGE_VERSION = 'v8.1.1' }
+if (-not (Test-Path env:VTK_PACKAGE_VERSION)) { $env:VTK_PACKAGE_VERSION = 'v8.1.2' }
 Invoke-WebRequest -Uri "https://github.com/KitwareMedical/VTKPythonBuilds/releases/download/$env:VTK_PACKAGE_VERSION/VTKPythonBuilds-windows.zip" -OutFile "VTKPythonBuilds-windows.zip"
 sz x VTKPythonBuilds-windows.zip -oC:\P -aoa -r
 Invoke-WebRequest -Uri "https://data.kitware.com/api/v1/file/5c0ad59d8d777f2179dd3e9c/download" -OutFile "doxygen-1.8.11.windows.bin.zip"
