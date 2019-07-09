@@ -193,7 +193,7 @@ jobs:
       set CC=cl.exe
       set CXX=cl.exe
       powershell.exe -file .\scripts\windows-download-cache.ps1
-      python .\scripts\windows_build_module_wheels.py --py-envs 35-x64 --py-envs 36-x64 --py-envs 37-x64
+      python .\scripts\windows_build_module_wheels.py --py-envs 35-x64 36-x64 37-x64
     displayName: 'Build Python packages'
 
   - task: PublishPipelineArtifact@0
