@@ -12,28 +12,28 @@ trigger:
 
 jobs:
 
-- job: 'Test'
-  displayName: "Build and test"
+- job: 'Build'
+  displayName: "C++ Build"
   timeoutInMinutes: 0
   cancelTimeoutInMinutes: 300
 
   strategy:
     matrix:
-      Linux:
-        imageName: 'ubuntu-16.04'
-        cCompiler: gcc
-        cxxCompiler: g++
-        compilerInitialization: ''
+      #Linux:
+        #imageName: 'ubuntu-16.04'
+        #cCompiler: gcc
+        #cxxCompiler: g++
+        #compilerInitialization: ''
       macOS:
         imageName: 'macos-10.13'
         cCompiler: clang
         cxxCompiler: clang++
         compilerInitialization: ''
-      Windows:
-        imageName: 'vs2017-win2016'
-        cCompiler: cl.exe
-        cxxCompiler: cl.exe
-        compilerInitialization: 'call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Auxiliary\Build\vcvars64.bat"'
+      #Windows:
+        #imageName: 'vs2017-win2016'
+        #cCompiler: cl.exe
+        #cxxCompiler: cl.exe
+        #compilerInitialization: 'call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Auxiliary\Build\vcvars64.bat"'
 
   pool:
     vmImage: $(imageName)
@@ -114,7 +114,7 @@ jobs:
       endif()
       set(CTEST_BUILD_NAME "$(Build.Repository.Name)-$(Agent.OS)-Build$(Build.BuildId)\${pr}\${branch}")
       set(CTEST_UPDATE_VERSION_ONLY 1)
-      set(CTEST_TEST_ARGS \${CTEST_TEST_ARGS} PARALLEL_LEVEL \${PARALLEL_LEVEL})
+      set(CTEST_TEST_ARGS \${CTEST_TEST_ARGS} PARALLEL_LEVEL \${PARALLEL_LEVEL} INCLUDE "VTKImageTo")
       set(CTEST_BUILD_CONFIGURATION "Release")
       set(CTEST_CMAKE_GENERATOR "Ninja")
       set(CTEST_CUSTOM_WARNING_EXCEPTION
