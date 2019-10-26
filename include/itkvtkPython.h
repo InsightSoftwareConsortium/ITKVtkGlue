@@ -27,5 +27,6 @@
 #include "itkVTKImageExport.h"
 #include "itkVTKImageImport.h"
 #include "vtkImageData.h"
+#include "vtkRenderWindowInteractor.h"
 
 #include "vtkPythonUtil.h"

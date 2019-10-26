@@ -1,4 +1,5 @@
-itk_wrap_class("itk::ViewImage")
+itk_wrap_include("itkvtkPython.h")
+itk_wrap_class("itk::ViewImage" POINTER)
   UNIQUE(types "${WRAP_ITK_SCALAR}")
   UNIQUE(dims "2;3")
   foreach(d ${dims})
