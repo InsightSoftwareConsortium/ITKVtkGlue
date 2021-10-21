@@ -1,6 +1,6 @@
 /*=========================================================================
  *
- *  Copyright Insight Software Consortium
+ *  Copyright NumFOCUS
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,7 +23,8 @@
 
 namespace itk
 {
-/** \class VTKImageExport
+/**
+ *\class VTKImageExport
  * \brief Connect the end of an ITK image pipeline to a VTK pipeline.
  *
  * VTKImageExport can be used at the end of an ITK image pipeline to
@@ -50,17 +51,18 @@ namespace itk
  * \sa VTKImageExportBase
  * \ingroup ITKVtkGlue
  */
-template< typename TInputImage >
-class ITK_TEMPLATE_EXPORT VTKImageExport:public VTKImageExportBase
+template <typename TInputImage>
+class ITK_TEMPLATE_EXPORT VTKImageExport : public VTKImageExportBase
 {
 public:
-  /** Standard class typedefs. */
-  typedef VTKImageExport             Self;
-  typedef VTKImageExportBase         Superclass;
-  typedef SmartPointer< Self >       Pointer;
-  typedef SmartPointer< const Self > ConstPointer;
-  itkStaticConstMacro(InputImageDimension, unsigned int,
-                      TInputImage::ImageDimension);
+  ITK_DISALLOW_COPY_AND_MOVE(VTKImageExport);
+
+  /** Standard class type aliases. */
+  using Self = VTKImageExport;
+  using Superclass = VTKImageExportBase;
+  using Pointer = SmartPointer<Self>;
+  using ConstPointer = SmartPointer<const Self>;
+  static constexpr unsigned int InputImageDimension = TInputImage::ImageDimension;
 
   /** Run-time type information (and related methods). */
   itkTypeMacro(VTKImageExport, VTKImageExportBase);
@@ -69,63 +71,76 @@ public:
   itkNewMacro(Self);
 
   /** The type of the input image. */
-  typedef TInputImage InputImageType;
+  using InputImageType = TInputImage;
 
 #ifdef ITK_USE_CONCEPT_CHECKING
-  itkConceptMacro( ImageDimensionCheck,
-                   ( Concept::SameDimensionOrMinusOneOrTwo<
-                     3,itkGetStaticConstMacro(InputImageDimension) > ) );
+  itkConceptMacro(ImageDimensionCheck, (Concept::SameDimensionOrMinusOneOrTwo<3, Self::InputImageDimension>));
 #endif
   /** Set the input image of this image exporter. */
   using Superclass::SetInput;
-  void SetInput(const InputImageType *);
-  InputImageType * GetInput();
+  void
+  SetInput(const InputImageType *);
+  InputImageType *
+  GetInput();
 
 protected:
   VTKImageExport();
-  ~VTKImageExport() {}
-  void PrintSelf(std::ostream & os, Indent indent) const ITK_OVERRIDE;
+  ~VTKImageExport() override = default;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
-  typedef typename InputImageType::Pointer    InputImagePointer;
-  typedef typename InputImageType::RegionType InputRegionType;
-  typedef typename InputRegionType::SizeType  InputSizeType;
-  typedef typename InputRegionType::IndexType InputIndexType;
+  using InputImagePointer = typename InputImageType::Pointer;
+  using InputRegionType = typename InputImageType::RegionType;
+  using InputSizeType = typename InputRegionType::SizeType;
+  using InputIndexType = typename InputRegionType::IndexType;
 
-  int * WholeExtentCallback() ITK_OVERRIDE;
+  int *
+  WholeExtentCallback() override;
 
-  double * SpacingCallback() ITK_OVERRIDE;
+  double *
+  SpacingCallback() override;
 
-  double * OriginCallback() ITK_OVERRIDE;
+  double *
+  OriginCallback() override;
 
-  float * FloatSpacingCallback() ITK_OVERRIDE;
+  double *
+  DirectionCallback() override;
 
-  float * FloatOriginCallback() ITK_OVERRIDE;
+  float *
+  FloatSpacingCallback() override;
 
-  const char * ScalarTypeCallback() ITK_OVERRIDE;
+  float *
+  FloatOriginCallback() override;
 
-  int NumberOfComponentsCallback() ITK_OVERRIDE;
+  const char *
+  ScalarTypeCallback() override;
 
-  void PropagateUpdateExtentCallback(int *) ITK_OVERRIDE;
+  int
+  NumberOfComponentsCallback() override;
 
-  int * DataExtentCallback() ITK_OVERRIDE;
+  void
+  PropagateUpdateExtentCallback(int *) override;
 
-  void * BufferPointerCallback() ITK_OVERRIDE;
+  int *
+  DataExtentCallback() override;
+
+  void *
+  BufferPointerCallback() override;
 
 private:
-  ITK_DISALLOW_COPY_AND_ASSIGN(VTKImageExport);
-
   std::string m_ScalarTypeName;
   int         m_WholeExtent[6];
   int         m_DataExtent[6];
   double      m_DataSpacing[3];
   double      m_DataOrigin[3];
+  double      m_DataDirection[9];
   float       m_FloatDataSpacing[3];
   float       m_FloatDataOrigin[3];
 };
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkVTKImageExport.hxx"
+#  include "itkVTKImageExport.hxx"
 #endif
 
 #endif

@@ -56,10 +56,12 @@ template< typename TOutputImage >
 class ITK_TEMPLATE_EXPORT VTKImageImport:public ImageSource< TOutputImage >
 {
 public:
-  /** Standard class typedefs. */
-  typedef VTKImageImport              Self;
-  typedef ImageSource< TOutputImage > Superclass;
-  typedef SmartPointer< Self >        Pointer;
+  ITK_DISALLOW_COPY_AND_MOVE(VTKImageImport);
+
+  /** Standard class type aliases. */
+  using Self = VTKImageImport;
+  using Superclass = ImageSource<TOutputImage>;
+  using Pointer = SmartPointer<Self>;
 
   /** Method for creation through the object factory. */
   itkNewMacro(Self);
@@ -67,35 +69,35 @@ public:
   /** Run-time type information (and related methods). */
   itkTypeMacro(VTKImageImport, ImageSource);
 
-  /** Convenient typedefs from the output image. */
-  typedef TOutputImage                         OutputImageType;
-  typedef typename OutputImageType::Pointer    OutputImagePointer;
-  typedef typename OutputImageType::PixelType  OutputPixelType;
-  typedef typename OutputImageType::SizeType   OutputSizeType;
-  typedef typename OutputImageType::IndexType  OutputIndexType;
-  typedef typename OutputImageType::RegionType OutputRegionType;
+  /** Convenient type alias from the output image. */
+  using OutputImageType = TOutputImage;
+  using OutputImagePointer = typename OutputImageType::Pointer;
+  using OutputPixelType = typename OutputImageType::PixelType;
+  using OutputSizeType = typename OutputImageType::SizeType;
+  using OutputIndexType = typename OutputImageType::IndexType;
+  using OutputRegionType = typename OutputImageType::RegionType;
 
   /** The output image dimension. */
-  itkStaticConstMacro(OutputImageDimension, unsigned int,
-                      OutputImageType::ImageDimension);
+  static constexpr unsigned int OutputImageDimension = OutputImageType::ImageDimension;
 
   /** These are function pointer types for the pipeline connection
    * callbacks. */
-  typedef void ( *        UpdateInformationCallbackType )(void *);
-  typedef int ( *         PipelineModifiedCallbackType )(void *);
-  typedef int * ( *       WholeExtentCallbackType )(void *);
-  typedef double * ( *    SpacingCallbackType )(void *);
-  typedef double * ( *    OriginCallbackType )(void *);
-  typedef const char * ( *ScalarTypeCallbackType )(void *);
-  typedef int ( *         NumberOfComponentsCallbackType )(void *);
-  typedef void ( *        PropagateUpdateExtentCallbackType )(void *, int *);
-  typedef void ( *        UpdateDataCallbackType )(void *);
-  typedef int * ( *       DataExtentCallbackType )(void *);
-  typedef void * ( *      BufferPointerCallbackType )(void *);
+  using UpdateInformationCallbackType = void (*)(void *);
+  using PipelineModifiedCallbackType = int (*)(void *);
+  using WholeExtentCallbackType = int * (*)(void *);
+  using SpacingCallbackType = double * (*)(void *);
+  using OriginCallbackType = double * (*)(void *);
+  using DirectionCallbackType = double * (*)(void *);
+  using ScalarTypeCallbackType = const char * (*)(void *);
+  using NumberOfComponentsCallbackType = int (*)(void *);
+  using PropagateUpdateExtentCallbackType = void (*)(void *, int *);
+  using UpdateDataCallbackType = void (*)(void *);
+  using DataExtentCallbackType = int * (*)(void *);
+  using BufferPointerCallbackType = void * (*)(void *);
 
   /** Compatibility for VTK older than 4.4.  */
-  typedef float * ( *FloatSpacingCallbackType )(void *);
-  typedef float * ( *FloatOriginCallbackType )(void *);
+  using FloatSpacingCallbackType = float * (*)(void *);
+  using FloatOriginCallbackType = float * (*)(void *);
 
   /** What to do when receiving UpdateInformation(). */
   itkSetMacro(UpdateInformationCallback, UpdateInformationCallbackType);
@@ -114,16 +116,26 @@ public:
   itkGetConstMacro(SpacingCallback, SpacingCallbackType);
   itkSetMacro(FloatSpacingCallback, FloatSpacingCallbackType);
   itkGetConstMacro(FloatSpacingCallback, FloatSpacingCallbackType);
-  void SetSpacingCallback(FloatSpacingCallbackType f)
-  { this->SetFloatSpacingCallback(f); }
+  void
+  SetSpacingCallback(FloatSpacingCallbackType f)
+  {
+    this->SetFloatSpacingCallback(f);
+  }
 
   /** What to do when receiving SetOrigin(). */
   itkSetMacro(OriginCallback, OriginCallbackType);
   itkGetConstMacro(OriginCallback, OriginCallbackType);
   itkSetMacro(FloatOriginCallback, FloatOriginCallbackType);
   itkGetConstMacro(FloatOriginCallback, FloatOriginCallbackType);
-  void SetOriginCallback(FloatOriginCallbackType f)
-  { this->SetFloatOriginCallback(f); }
+  void
+  SetOriginCallback(FloatOriginCallbackType f)
+  {
+    this->SetFloatOriginCallback(f);
+  }
+
+  /** What to do when receiving SetDirection(). */
+  itkSetMacro(DirectionCallback, DirectionCallbackType);
+  itkGetConstMacro(DirectionCallback, DirectionCallbackType);
 
   /** What to do when receiving UpdateInformation(). */
   itkSetMacro(ScalarTypeCallback, ScalarTypeCallbackType);
@@ -155,20 +167,23 @@ public:
 
 protected:
   VTKImageImport();
-  ~VTKImageImport() {}
-  void PrintSelf(std::ostream & os, Indent indent) const override;
+  ~VTKImageImport() override = default;
+  void
+  PrintSelf(std::ostream & os, Indent indent) const override;
 
-  void PropagateRequestedRegion(DataObject *) override;
+  void
+  PropagateRequestedRegion(DataObject *) override;
 
-  void UpdateOutputInformation() override;
+  void
+  UpdateOutputInformation() override;
 
-  void GenerateData() override;
+  void
+  GenerateData() override;
 
-  void GenerateOutputInformation() override;
+  void
+  GenerateOutputInformation() override;
 
 private:
-  ITK_DISALLOW_COPY_AND_ASSIGN(VTKImageImport);
-
   void *                            m_CallbackUserData;
   UpdateInformationCallbackType     m_UpdateInformationCallback;
   PipelineModifiedCallbackType      m_PipelineModifiedCallback;
@@ -177,6 +192,7 @@ private:
   FloatSpacingCallbackType          m_FloatSpacingCallback;
   OriginCallbackType                m_OriginCallback;
   FloatOriginCallbackType           m_FloatOriginCallback;
+  DirectionCallbackType             m_DirectionCallback;
   ScalarTypeCallbackType            m_ScalarTypeCallback;
   NumberOfComponentsCallbackType    m_NumberOfComponentsCallback;
   PropagateUpdateExtentCallbackType m_PropagateUpdateExtentCallback;
@@ -189,7 +205,7 @@ private:
 } // namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkVTKImageImport.hxx"
+#  include "itkVTKImageImport.hxx"
 #endif
 
 #endif // itkVTKImageImport_h
