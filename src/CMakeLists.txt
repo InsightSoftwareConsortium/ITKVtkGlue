@@ -1,11 +1,12 @@
-set(ITKVtkGlue_SRCS
-  itkVTKImageExportBase.cxx
-  vtkPolyDataBaselineComparison.cxx
-  )
 if(NOT VTK_RENDERING_BACKEND STREQUAL "None")
-  list(APPEND ITKVtkGlue_SRCS QuickView.cxx)
+  set(ITKVtkGlue_SRCS
+    QuickView.cxx
+    itkVTKImageExportBase.cxx
+    vtkPolyDataBaselineComparison.cxx
+    )
+
+  add_library(ITKVtkGlue ${ITKVtkGlue_SRCS})
+  itk_module_link_dependencies()
+  target_link_libraries_with_dynamic_lookup(ITKVtkGlue ${ITKVtkGlue_VTK_LIBRARIES})
+  itk_module_target(ITKVtkGlue)
 endif()
-
-
-itk_module_add_library(ITKVtkGlue ${ITKVtkGlue_SRCS})
-target_link_libraries_with_dynamic_lookup(ITKVtkGlue ${ITKVtkGlue_VTK_LIBRARIES})

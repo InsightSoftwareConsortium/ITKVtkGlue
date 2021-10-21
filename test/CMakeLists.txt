@@ -47,7 +47,7 @@ function(itkvtk_add_test)
 	  COMMAND ${ITKVTK_COMMAND})
 	# Get VTK library (DLL for Windows) location
 	set_tests_properties(${ITKVTK_NAME} PROPERTIES
-		ENVIRONMENT PATH=$<TARGET_FILE_DIR:vtksys>)
+		ENVIRONMENT PATH=$<TARGET_FILE_DIR:VTK::vtksys>)
 endfunction()
 
 itkvtk_add_test(

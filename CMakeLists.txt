@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.16.32)
 project(ITKVtkGlue)
 
 if(NOT ITK_SOURCE_DIR)
@@ -7,26 +7,9 @@ if(NOT ITK_SOURCE_DIR)
 endif()
 
 
-set(ITKVtkGlue_LIBRARIES ITKVtkGlue)
-if(NOT COMMAND vtk_module_config)
-  macro(vtk_module_config ns)
-     foreach(arg ${ARGN})
-      if(${arg} MATCHES "^[Vv][Tt][Kk]")
-        string(REGEX REPLACE "^[Vv][Tt][Kk]" "" _arg ${arg})
-      else()
-        set(_arg ${arg})
-      endif()
-      set(${ns}_LIBRARIES ${${ns}_LIBRARIES} VTK::${_arg})
-     endforeach()
-  endmacro()
-
-  if(NOT VTK_RENDERING_BACKEND)
-    set(VTK_RENDERING_BACKEND OpenGL2)
-  endif()
+if(NOT VTK_RENDERING_BACKEND STREQUAL "None")
+  set(ITKVtkGlue_LIBRARIES ITKVtkGlue)
 endif()
-
-# Skip the header tests because of weak linking
-set(ITKVtkGlue_THIRD_PARTY 1)
 
 #
 # Add the third party includes and libraries
@@ -38,60 +21,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${VTK_REQUIRED_CXX_FLAGS}")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${VTK_REQUIRED_EXE_LINKER_FLAGS}")
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${VTK_REQUIRED_SHARED_LINKER_FLAGS}")
 set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${VTK_REQUIRED_MODULE_LINKER_FLAGS}")
-
-# Older versions of VTK (VTK 5.5 for example) do not have VTK_VERSION, in this
-# case it needs to be defined manually
-if(NOT VTK_VERSION)
-  set(VTK_VERSION "${VTK_MAJOR_VERSION}.${VTK_MINOR_VERSION}.${VTK_BUILD_VERSION}")
-endif()
-if(NOT VTK_RENDERING_BACKEND)
-  if(NOT COMMAND vtk_module_config)
-    set(VTK_RENDERING_BACKEND OpenGL2)
-  else()
-    set(VTK_RENDERING_BACKEND OpenGL)
-  endif()
-endif()
-set(_target_freetypeopengl)
-if(TARGET vtkRenderingFreeType${VTK_RENDERING_BACKEND})
-  set(_target_freetypeopengl vtkRenderingFreeType${VTK_RENDERING_BACKEND})
-endif()
-set(_rendering_modules )
-if(NOT VTK_RENDERING_BACKEND STREQUAL "None")
-  set(_rendering_modules
-    vtkRendering${VTK_RENDERING_BACKEND}
-    vtkInteractionStyle
-    vtkInteractionWidgets
-    )
-endif()
-
-if (${VTK_VERSION} VERSION_LESS ${VERSION_MIN})
-  message(ERROR " VtkGlue requires VTK version ${VERSION_MIN} or newer but the current version is ${VTK_VERSION}")
-elseif( ${VTK_VERSION} VERSION_LESS 6.0.0 )
-  set(ITKVtkGlue_VTK_INCLUDE_DIRS ${VTK_INCLUDE_DIRS})
-  set(ITKVtkGlue_VTK_LIBRARIES ${VTK_LIBRARIES})
-else()
-  set(_wrap_module)
-  if(ITK_WRAP_PYTHON)
-    set(_wrap_module vtkWrappingPythonCore)
-  endif()
-  vtk_module_config(ITKVtkGlue_VTK
-    vtkRenderingFreeType
-    ${_target_freetypeopengl}
-    ${_rendering_modules}
-    vtkIOImage
-    vtkIOLegacy
-    vtkImagingSources
-    ${_wrap_module}
-    )
-endif()
-# Artifacts of the VTKPythonPackage build configuration
-list(FILTER ITKVtkGlue_VTK_LIBRARIES EXCLUDE REGEX
-  "libpython-not-needed-symbols")
-list(FILTER ITKVtkGlue_VTK_LIBRARIES EXCLUDE REGEX
-  "optimized")
-list(FILTER ITKVtkGlue_VTK_LIBRARIES EXCLUDE REGEX
-  "debug")
-
 
 # The VTK DICOMParser and vtkmetaio includes conflict with the ITK
 # versions. Here we remove them from the include directories.
@@ -148,46 +77,42 @@ if(NOT VTK_RENDERING_BACKEND)
   endif()
 endif()
 set(_target_freetypeopengl)
-if(TARGET vtkRenderingFreeType${VTK_RENDERING_BACKEND})
-  set(_target_freetypeopengl vtkRenderingFreeType${VTK_RENDERING_BACKEND})
+if(TARGET ${_target_prefix}RenderingFreeType${VTK_RENDERING_BACKEND})
+  set(_target_freetypeopengl ${_target_prefix}RenderingFreeType${VTK_RENDERING_BACKEND})
+endif()
+
+set(_required_vtk_libraries
+  ${_target_prefix}IOImage
+  ${_target_prefix}IOLegacy
+  ${_target_prefix}ImagingSources
+  ${_target_prefix}FiltersGeometry
+  )
+if(ITK_WRAP_PYTHON)
+  list(APPEND _required_vtk_libraries ${_target_prefix}WrappingPythonCore)
 endif()
 if(NOT VTK_RENDERING_BACKEND STREQUAL \"None\")
-  set(_rendering_modules
-    vtkRendering${VTK_RENDERING_BACKEND}
-    vtkInteractionStyle
-    vtkInteractionWidgets
-    )
-endif()
-
-if( ${VTK_VERSION} VERSION_LESS 6.0.0 )
-  set(ITKVtkGlue_VTK_INCLUDE_DIRS ${VTK_INCLUDE_DIRS})
-  set(ITKVtkGlue_VTK_LIBRARIES ${VTK_LIBRARIES})
-else()
-  set(_wrap_module)
-  if(ITK_WRAP_PYTHON AND PYTHON_VERSION_STRING VERSION_LESS 3.0)
-    set(_wrap_module vtkWrappingPythonCore)
-  endif()
-  vtk_module_config(ITKVtkGlue_VTK
-    vtkRenderingFreeType
+  list(APPEND _required_vtk_libraries
+    ${_target_prefix}Rendering${VTK_RENDERING_BACKEND}
+    ${_target_prefix}RenderingAnnotation
+    ${_target_prefix}RenderingFreeType
     ${_target_freetypeopengl}
-    ${_rendering_modules}
-    vtkIOImage
-    vtkIOLegacy
-    vtkImagingSources
-    ${_wrap_module}
-    )
-
-  set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS \${ITKVtkGlue_VTK_DEFINITIONS})
-
-  # Artifacts of the VTKPythonPackage build configuration
-  list(FILTER ITKVtkGlue_VTK_LIBRARIES EXCLUDE REGEX
-    \"libpython-not-needed-symbols\")
-  list(FILTER ITKVtkGlue_VTK_LIBRARIES EXCLUDE REGEX
-    \"optimized\")
-  list(FILTER ITKVtkGlue_VTK_LIBRARIES EXCLUDE REGEX
-    \"debug\")
+    ${_target_prefix}InteractionStyle
+    ${_target_prefix}InteractionWidgets
+  )
 endif()
+vtk_module_config(ITKVtkGlue_VTK
+  \${_required_vtk_libraries}
+  )
+set(ITKVtkGlue_VTK_LIBRARIES \${_required_vtk_libraries})
+set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS \${ITKVtkGlue_VTK_DEFINITIONS})
 ")
+# Artifacts of the VTKPythonPackage build configuration
+list(FILTER ITKVtkGlue_VTK_LIBRARIES EXCLUDE REGEX
+  \"libpython-not-needed-symbols\")
+list(FILTER ITKVtkGlue_VTK_LIBRARIES EXCLUDE REGEX
+  \"optimized\")
+list(FILTER ITKVtkGlue_VTK_LIBRARIES EXCLUDE REGEX
+  \"debug\")
 set(ITKVtkGlue_EXPORT_CODE_BUILD "
 if(NOT ITK_BINARY_DIR)
   set(VTK_DIR \"${VTK_DIR}\")
@@ -217,38 +142,32 @@ if(NOT ITK_BINARY_DIR)
       set(VTK_RENDERING_BACKEND OpenGL)
     endif()
   endif()
-  if(TARGET vtkRenderingFreeType${VTK_RENDERING_BACKEND})
-    set(_target_freetypeopengl vtkRenderingFreeType${VTK_RENDERING_BACKEND})
+  if(TARGET ${_target_prefix}RenderingFreeType${VTK_RENDERING_BACKEND})
+    set(_target_freetypeopengl ${_target_prefix}RenderingFreeType${VTK_RENDERING_BACKEND})
+  endif()
+
+  set(_required_vtk_libraries
+    ${_target_prefix}IOImage
+    ${_target_prefix}IOLegacy
+    ${_target_prefix}ImagingSources
+    )
+  if(ITK_WRAP_PYTHON)
+    list(APPEND _required_vtk_libraries ${_target_prefix}WrappingPythonCore)
   endif()
   if(NOT VTK_RENDERING_BACKEND STREQUAL \"None\")
-    set(_rendering_modules
-      vtkRendering${VTK_RENDERING_BACKEND}
-      vtkInteractionStyle
-      vtkInteractionWidgets
-      )
-  endif()
-
-  if( ${VTK_VERSION} VERSION_LESS 6.0.0 )
-    set(ITKVtkGlue_VTK_INCLUDE_DIRS ${VTK_INCLUDE_DIRS})
-    set(ITKVtkGlue_VTK_LIBRARIES ${VTK_LIBRARIES})
-  else()
-    set(_wrap_module)
-    if(ITK_WRAP_PYTHON AND PYTHON_VERSION_STRING VERSION_LESS 3.0)
-      set(_wrap_module vtkWrappingPythonCore)
-    endif()
-    vtk_module_config(ITKVtkGlue_VTK
-      vtkRenderingFreeType
+    list(APPEND _required_vtk_libraries
+      ${_target_prefix}Rendering${VTK_RENDERING_BACKEND}
+      ${_target_prefix}RenderingFreeType
       ${_target_freetypeopengl}
-      ${_rendering_modules}
-      vtkIOImage
-      vtkIOLegacy
-      vtkImagingSources
-      ${_wrap_module}
-      )
-
-    set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS \${ITKVtkGlue_VTK_DEFINITIONS})
+      ${_target_prefix}InteractionStyle
+      ${_target_prefix}InteractionWidgets
+    )
   endif()
-
+  vtk_module_config(ITKVtkGlue_VTK
+    \${_required_vtk_libraries}
+    )
+  set(ITKVtkGlue_VTK_LIBRARIES \${_required_vtk_libraries})
+  set_property(DIRECTORY APPEND PROPERTY COMPILE_DEFINITIONS \${ITKVtkGlue_VTK_DEFINITIONS})
   # Artifacts of the VTKPythonPackage build configuration
   list(FILTER ITKVtkGlue_VTK_LIBRARIES EXCLUDE REGEX
     \"libpython-not-needed-symbols\")
@@ -261,6 +180,12 @@ endif()
 
 # For portable Python packages
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/targetLinkLibrariesWithDynamicLookup.cmake)
+
+if(VTK_RENDERING_BACKEND STREQUAL "None")
+  set(ITKVtkGlue_LIBRARIES ${ITKVtkGlue_VTK_LIBRARIES})
+else()
+  set(ITKVtkGlue_LIBRARIES ITKVtkGlue)
+endif()
 
 if(NOT ITK_SOURCE_DIR)
   find_package(ITK REQUIRED)
