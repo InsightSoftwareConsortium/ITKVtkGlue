@@ -31,7 +31,7 @@
 
 #include <vtkCellArray.h>
 
-namespace
+namespace itk
 {
 
 template< typename TMesh >
@@ -121,7 +121,7 @@ private:
   int* m_TypeArray;
 };
 
-} // end anonymous namespace
+}
 
 namespace itk
 {

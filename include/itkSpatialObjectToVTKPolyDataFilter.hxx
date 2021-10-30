@@ -143,4 +143,3 @@ SpatialObjectToVTKPolyDataFilter<VDimension>
 } // end namespace itk
 
 #endif
-
