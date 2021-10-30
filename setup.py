@@ -14,7 +14,7 @@ except ImportError:
 setup(
     name='itk-vtkglue',
     version='0.3.0',
-    author='Insight Software Consortium',
+    author='NumFOCUS',
     author_email='itk+community@discourse.itk.org',
     packages=['itk'],
     package_dir={'itk': 'itk'},
