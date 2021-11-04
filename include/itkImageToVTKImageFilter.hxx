@@ -1,6 +1,6 @@
 /*=========================================================================
  *
- *  Copyright Insight Software Consortium
+ *  Copyright NumFOCUS
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,8 +27,7 @@ namespace itk
  * Constructor
  */
 template <typename TInputImage>
-ImageToVTKImageFilter<TInputImage>
-::ImageToVTKImageFilter()
+ImageToVTKImageFilter<TInputImage>::ImageToVTKImageFilter()
 {
   m_Importer = vtkImageImport::New();
   m_Exporter = ExporterFilterType::New();
@@ -38,6 +37,9 @@ ImageToVTKImageFilter<TInputImage>
   m_Importer->SetWholeExtentCallback(m_Exporter->GetWholeExtentCallback());
   m_Importer->SetSpacingCallback(m_Exporter->GetSpacingCallback());
   m_Importer->SetOriginCallback(m_Exporter->GetOriginCallback());
+#if VTK_MAJOR_VERSION >= 9 || (VTK_MAJOR_VERSION == 8 && VTK_MINOR_VERSION >= 90)
+  m_Importer->SetDirectionCallback(m_Exporter->GetDirectionCallback());
+#endif
   m_Importer->SetScalarTypeCallback(m_Exporter->GetScalarTypeCallback());
   m_Importer->SetNumberOfComponentsCallback(m_Exporter->GetNumberOfComponentsCallback());
   m_Importer->SetPropagateUpdateExtentCallback(m_Exporter->GetPropagateUpdateExtentCallback());
@@ -45,21 +47,19 @@ ImageToVTKImageFilter<TInputImage>
   m_Importer->SetDataExtentCallback(m_Exporter->GetDataExtentCallback());
   m_Importer->SetBufferPointerCallback(m_Exporter->GetBufferPointerCallback());
   m_Importer->SetCallbackUserData(m_Exporter->GetCallbackUserData());
-
 }
 
 /**
  * Destructor
  */
 template <typename TInputImage>
-ImageToVTKImageFilter<TInputImage>
-::~ImageToVTKImageFilter()
+ImageToVTKImageFilter<TInputImage>::~ImageToVTKImageFilter()
 {
-  if( m_Importer )
-    {
+  if (m_Importer)
+  {
     m_Importer->Delete();
     m_Importer = nullptr;
-    }
+  }
 }
 
 /**
@@ -67,16 +67,14 @@ ImageToVTKImageFilter<TInputImage>
  */
 template <typename TInputImage>
 void
-ImageToVTKImageFilter<TInputImage>
-::SetInput( const InputImageType * inputImage )
+ImageToVTKImageFilter<TInputImage>::SetInput(const InputImageType * inputImage)
 {
-  m_Exporter->SetInput( inputImage );
+  m_Exporter->SetInput(inputImage);
 }
 
 template <typename TInputImage>
 typename ImageToVTKImageFilter<TInputImage>::InputImageType *
-ImageToVTKImageFilter<TInputImage>
-::GetInput()
+ImageToVTKImageFilter<TInputImage>::GetInput()
 {
   return m_Exporter->GetInput();
 }
@@ -86,8 +84,7 @@ ImageToVTKImageFilter<TInputImage>
  */
 template <typename TInputImage>
 vtkImageData *
-ImageToVTKImageFilter<TInputImage>
-::GetOutput() const
+ImageToVTKImageFilter<TInputImage>::GetOutput() const
 {
   return m_Importer->GetOutput();
 }
@@ -97,8 +94,7 @@ ImageToVTKImageFilter<TInputImage>
  */
 template <typename TInputImage>
 vtkImageImport *
-ImageToVTKImageFilter<TInputImage>
-::GetImporter() const
+ImageToVTKImageFilter<TInputImage>::GetImporter() const
 {
   return m_Importer;
 }
@@ -108,8 +104,7 @@ ImageToVTKImageFilter<TInputImage>
  */
 template <typename TInputImage>
 typename ImageToVTKImageFilter<TInputImage>::ExporterFilterType *
-ImageToVTKImageFilter<TInputImage>
-::GetExporter() const
+ImageToVTKImageFilter<TInputImage>::GetExporter() const
 {
   return m_Exporter.GetPointer();
 }
@@ -119,8 +114,7 @@ ImageToVTKImageFilter<TInputImage>
  */
 template <typename TInputImage>
 void
-ImageToVTKImageFilter<TInputImage>
-::Update()
+ImageToVTKImageFilter<TInputImage>::Update()
 {
   m_Importer->Update();
 }
@@ -130,8 +124,7 @@ ImageToVTKImageFilter<TInputImage>
  */
 template <typename TInputImage>
 void
-ImageToVTKImageFilter<TInputImage>
-::UpdateLargestPossibleRegion()
+ImageToVTKImageFilter<TInputImage>::UpdateLargestPossibleRegion()
 {
   m_Importer->UpdateWholeExtent();
 }

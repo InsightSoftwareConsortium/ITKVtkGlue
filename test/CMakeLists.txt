@@ -18,18 +18,18 @@ if(NOT VTK_RENDERING_BACKEND STREQUAL "None")
     QuickViewTest.cxx
     itkVtkConnectedComponentImageFilterTest.cxx
     itkVtkMedianFilterTest.cxx
-    itkVTKVisualizeLevelSetsInteractivePauseTest
-    itkVTKVisualize2DDenseImageLevelSetTest
-    itkVTKVisualize2DWhitakerLevelSetTest
-    itkImageToRGBVTKImageFilterTest
-    itkVTKVisualize2DCellsLevelSetTest
-    itkVTKVisualize2DCellsLevelSetSurfaceTest
-    itkVTKVisualize2DCellsLevelSetLayersTest
-    itkVTKVisualize2DWhitakerLevelSetLayersTest
-    itkVTKVisualize2DShiLevelSetLayersTest
-    itkVTKVisualize2DMalcolmLevelSetLayersTest
-    itkVTKVisualize3DDenseImageLevelSetTest
-    itkVTKVisualize3DWhitakerLevelSetTest
+    itkVTKVisualizeLevelSetsInteractivePauseTest.cxx
+    itkVTKVisualize2DDenseImageLevelSetTest.cxx
+    itkVTKVisualize2DWhitakerLevelSetTest.cxx
+    itkImageToRGBVTKImageFilterTest.cxx
+    itkVTKVisualize2DCellsLevelSetTest.cxx
+    itkVTKVisualize2DCellsLevelSetSurfaceTest.cxx
+    itkVTKVisualize2DCellsLevelSetLayersTest.cxx
+    itkVTKVisualize2DWhitakerLevelSetLayersTest.cxx
+    itkVTKVisualize2DShiLevelSetLayersTest.cxx
+    itkVTKVisualize2DMalcolmLevelSetLayersTest.cxx
+    itkVTKVisualize3DDenseImageLevelSetTest.cxx
+    itkVTKVisualize3DWhitakerLevelSetTest.cxx
     )
 endif()
 
@@ -47,7 +47,7 @@ function(itkvtk_add_test)
 	  COMMAND ${ITKVTK_COMMAND})
 	# Get VTK library (DLL for Windows) location
 	set_tests_properties(${ITKVTK_NAME} PROPERTIES
-		ENVIRONMENT PATH=$<TARGET_FILE_DIR:vtksys>)
+		ENVIRONMENT PATH=$<TARGET_FILE_DIR:VTK::vtksys>)
 endfunction()
 
 itkvtk_add_test(
@@ -105,92 +105,92 @@ if(NOT VTK_RENDERING_BACKEND STREQUAL "None")
   set(TEMP ${ITK_TEST_OUTPUT_DIR})
 
   itk_add_test(NAME itkVTKVisualize2DDenseImageLevelSetTest
-    COMMAND ITKLevelSetsv4VisualizationTestDriver itkVTKVisualize2DDenseImageLevelSetTest)
+    COMMAND ITKVtkGlueTestDriver itkVTKVisualize2DDenseImageLevelSetTest)
 
   itk_add_test(NAME itkVTKVisualize2DWhitakerLevelSetTest
-    COMMAND ITKLevelSetsv4VisualizationTestDriver itkVTKVisualize2DWhitakerLevelSetTest)
+    COMMAND ITKVtkGlueTestDriver itkVTKVisualize2DWhitakerLevelSetTest)
 
   itk_add_test(NAME itkImageToRGBVTKImageFilterTest
-    COMMAND ITKLevelSetsv4VisualizationTestDriver itkImageToRGBVTKImageFilterTest)
+    COMMAND ITKVtkGlueTestDriver itkImageToRGBVTKImageFilterTest)
 
   itk_add_test(NAME itkVTKVisualize2DWhitakerLevelSetLayersTest
-    COMMAND ITKLevelSetsv4VisualizationTestDriver itkVTKVisualize2DWhitakerLevelSetLayersTest)
+    COMMAND ITKVtkGlueTestDriver itkVTKVisualize2DWhitakerLevelSetLayersTest)
 
   itk_add_test(NAME itkVTKVisualize2DShiLevelSetLayersTest
-    COMMAND ITKLevelSetsv4VisualizationTestDriver itkVTKVisualize2DShiLevelSetLayersTest)
+    COMMAND ITKVtkGlueTestDriver itkVTKVisualize2DShiLevelSetLayersTest)
 
   itk_add_test(NAME itkVTKVisualize2DMalcolmLevelSetLayersTest
-    COMMAND ITKLevelSetsv4VisualizationTestDriver itkVTKVisualize2DMalcolmLevelSetLayersTest)
+    COMMAND ITKVtkGlueTestDriver itkVTKVisualize2DMalcolmLevelSetLayersTest)
 
   itk_add_test(NAME itkVTKVisualize3DDenseImageLevelSetTest
-    COMMAND ITKLevelSetsv4VisualizationTestDriver itkVTKVisualize3DDenseImageLevelSetTest)
+    COMMAND ITKVtkGlueTestDriver itkVTKVisualize3DDenseImageLevelSetTest)
 
   itk_add_test(NAME itkVTKVisualize3DWhitakerLevelSetTest
-    COMMAND ITKLevelSetsv4VisualizationTestDriver itkVTKVisualize3DWhitakerLevelSetTest)
+    COMMAND ITKVtkGlueTestDriver itkVTKVisualize3DWhitakerLevelSetTest)
 
   itk_add_test(NAME itkVTKVisualize2DCellsDenseLevelSetTest
-    COMMAND ITKLevelSetsv4VisualizationTestDriver itkVTKVisualize2DCellsLevelSetTest
+    COMMAND ITKVtkGlueTestDriver itkVTKVisualize2DCellsLevelSetTest
     DATA{Input/cells.png} 60 Dense
     ${TEMP}/itkVTKVisualize2DCellsDenseLevelSetTest.png
     )
   itk_add_test(NAME itkVTKVisualize2DCellsDenseLevelSetSurfaceTest
-    COMMAND ITKLevelSetsv4VisualizationTestDriver itkVTKVisualize2DCellsLevelSetSurfaceTest
+    COMMAND ITKVtkGlueTestDriver itkVTKVisualize2DCellsLevelSetSurfaceTest
     DATA{Input/cells.png} 60 Dense
     ${TEMP}/itkVTKVisualize2DCellsDenseLevelSetSurfaceTest.png
     )
 
   itk_add_test(NAME itkVTKVisualize2DCellsWhitakerLevelSetTest
-    COMMAND ITKLevelSetsv4VisualizationTestDriver itkVTKVisualize2DCellsLevelSetTest
+    COMMAND ITKVtkGlueTestDriver itkVTKVisualize2DCellsLevelSetTest
     DATA{Input/cells.png} 200 Whitaker
     ${TEMP}/itkVTKVisualize2DCellsWhitakerLevelSetTest.png
     )
   itk_add_test(NAME itkVTKVisualize2DCellsWhitakerLevelSetSurfaceTest
-    COMMAND ITKLevelSetsv4VisualizationTestDriver itkVTKVisualize2DCellsLevelSetSurfaceTest
+    COMMAND ITKVtkGlueTestDriver itkVTKVisualize2DCellsLevelSetSurfaceTest
     DATA{Input/cells.png} 200 Whitaker
     ${TEMP}/itkVTKVisualize2DCellsWhitakerLevelSetSurfaceTest.png
     )
   itk_add_test(NAME itkVTKVisualize2DCellsWhitakerLevelSetLayersTest
-    COMMAND ITKLevelSetsv4VisualizationTestDriver itkVTKVisualize2DCellsLevelSetLayersTest
+    COMMAND ITKVtkGlueTestDriver itkVTKVisualize2DCellsLevelSetLayersTest
     DATA{Input/cells.png} 200 Whitaker
     )
 
   itk_add_test(NAME itkVTKVisualize2DCellsShiLevelSetTest
-    COMMAND ITKLevelSetsv4VisualizationTestDriver itkVTKVisualize2DCellsLevelSetTest
+    COMMAND ITKVtkGlueTestDriver itkVTKVisualize2DCellsLevelSetTest
     DATA{Input/cells.png} 200 Shi
     ${TEMP}/itkVTKVisualize2DCellsShiLevelSetTest.png
     )
   itk_add_test(NAME itkVTKVisualize2DCellsShiLevelSetSurfaceTest
-    COMMAND ITKLevelSetsv4VisualizationTestDriver itkVTKVisualize2DCellsLevelSetSurfaceTest
+    COMMAND ITKVtkGlueTestDriver itkVTKVisualize2DCellsLevelSetSurfaceTest
     DATA{Input/cells.png} 200 Shi
     ${TEMP}/itkVTKVisualize2DCellsShiLevelSetSurfaceTest.png
     )
   itk_add_test(NAME itkVTKVisualize2DCellsShiLevelSetLayersTest
-    COMMAND ITKLevelSetsv4VisualizationTestDriver itkVTKVisualize2DCellsLevelSetLayersTest
+    COMMAND ITKVtkGlueTestDriver itkVTKVisualize2DCellsLevelSetLayersTest
     DATA{Input/cells.png} 200 Shi
     )
 
   itk_add_test(NAME itkVTKVisualize2DCellsMalcolmLevelSetTest
-    COMMAND ITKLevelSetsv4VisualizationTestDriver itkVTKVisualize2DCellsLevelSetTest
+    COMMAND ITKVtkGlueTestDriver itkVTKVisualize2DCellsLevelSetTest
     DATA{Input/cells.png} 60 Malcolm
     ${TEMP}/itkVTKVisualize2DCellsMalcolmLevelSetTest.png
     )
   itk_add_test(NAME itkVTKVisualize2DCellsMalcolmLevelSetSurfaceTest
-    COMMAND ITKLevelSetsv4VisualizationTestDriver itkVTKVisualize2DCellsLevelSetSurfaceTest
+    COMMAND ITKVtkGlueTestDriver itkVTKVisualize2DCellsLevelSetSurfaceTest
     DATA{Input/cells.png} 60 Malcolm
     ${TEMP}/itkVTKVisualize2DCellsMalcolmLevelSetSurfaceTest.png
     )
   itk_add_test(NAME itkVTKVisualize2DCellsMalcolmLevelSetLayersTest
-    COMMAND ITKLevelSetsv4VisualizationTestDriver itkVTKVisualize2DCellsLevelSetLayersTest
+    COMMAND ITKVtkGlueTestDriver itkVTKVisualize2DCellsLevelSetLayersTest
     DATA{Input/cells.png} 60 Malcolm
     )
 
   itk_add_test(NAME itkVTKVisualizeLevelSetsInteractivePauseTest
-    COMMAND ITKLevelSetsv4VisualizationTestDriver itkVTKVisualizeLevelSetsInteractivePauseTest
+    COMMAND ITKVtkGlueTestDriver itkVTKVisualizeLevelSetsInteractivePauseTest
     DATA{Input/cells.png} 30
     )
 
   itk_add_test(NAME itkVTKVisualize2DLevelSetAsElevationMapTest
-    COMMAND ITKLevelSetsv4VisualizationTestDriver itkVTKVisualize2DLevelSetAsElevationMapTest
+    COMMAND ITKVtkGlueTestDriver itkVTKVisualize2DLevelSetAsElevationMapTest
     )
 
   set_property(TEST

@@ -1,6 +1,6 @@
 /*=========================================================================
  *
- *  Copyright Insight Software Consortium
+ *  Copyright NumFOCUS
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,6 +15,9 @@
  *  limitations under the License.
  *
  *=========================================================================*/
+#ifndef itkvtkPython_h
+#define itkvtkPython_h
+
 #if PY_VERSION_HEX < 0x3020000
 #ifdef Py_hash_t
 #undef Py_hash_t
@@ -29,3 +32,5 @@
 #include "vtkImageData.h"
 
 #include "vtkPythonUtil.h"
+
+#endif
