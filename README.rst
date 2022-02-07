@@ -5,7 +5,7 @@ ITKVTKGlue
     :target: https://dev.azure.com/ITKVtkGlue/ITKVtkGlue/_build/latest?definitionId=1&branchName=master
     :alt: Build Status
 
-This module contains classes that bridge and ITK and VTK image processing and visualization pipeline.
+This module contains classes that bridge ITK image processing and VTK visualization pipelines.
 
 ITK is an open-source, cross-platform library that provides developers with an extensive suite of software tools for image analysis. VTK enables visualization of images in three dimension. This module converts ITK and VTK image data structures in a processing pipelining without copying the pixel buffer.
 
