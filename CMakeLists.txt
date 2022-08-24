@@ -98,6 +98,12 @@ if(NOT VTK_RENDERING_BACKEND STREQUAL \"None\")
     ${_target_freetypeopengl}
     ${_target_prefix}InteractionStyle
     ${_target_prefix}InteractionWidgets
+    ${_target_prefix}RenderingAnnotation
+  )
+endif()
+if(BUILD_TESTING)
+  list(APPEND _required_vtk_libraries
+    ${_target_prefix}FiltersGeometry
   )
 endif()
 vtk_module_config(ITKVtkGlue_VTK
@@ -161,7 +167,13 @@ if(NOT ITK_BINARY_DIR)
       ${_target_freetypeopengl}
       ${_target_prefix}InteractionStyle
       ${_target_prefix}InteractionWidgets
+      ${_target_prefix}RenderingAnnotation
     )
+  endif()
+  if(BUILD_TESTING)
+     list(APPEND _required_vtk_libraries
+       ${_target_prefix}FiltersGeometry
+     )
   endif()
   vtk_module_config(ITKVtkGlue_VTK
     \${_required_vtk_libraries}
