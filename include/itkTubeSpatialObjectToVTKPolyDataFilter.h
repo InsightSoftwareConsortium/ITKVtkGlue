@@ -1,6 +1,6 @@
 /*=========================================================================
  *
- *  Copyright NumFOCUS
+ *  Copyright Insight Software Consortium
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,30 +15,30 @@
  *  limitations under the License.
  *
  *=========================================================================*/
-#ifndef itkBoxSpatialObjectToVTKPolyDataFilter_h
-#define itkBoxSpatialObjectToVTKPolyDataFilter_h
+#ifndef itkTubeSpatialObjectToVTKPolyDataFilter_h
+#define itkTubeSpatialObjectToVTKPolyDataFilter_h
 
 #include "itkSpatialObjectToVTKPolyDataFilter.h"
-#include "itkBoxSpatialObject.h"
+#include "itkTubeSpatialObject.h"
 
 namespace itk
 {
 
-/** \class BoxSpatialObjectToVTKPolyDataFilter
- * \brief Converts an ITK BoxSpatialObject into a VTK PolyData and plugs a
+/** \class TubeSpatialObjectToVTKPolyDataFilter
+ * \brief Converts an ITK TubeSpatialObject into a VTK PolyData and plugs a
  *  itk data pipeline to a VTK datapipeline.
  *
  * \ingroup   ITKVtkGlue
  */
-template< unsigned int VDimension >
-class ITK_TEMPLATE_EXPORT BoxSpatialObjectToVTKPolyDataFilter : public SpatialObjectToVTKPolyDataFilter< VDimension >
+template< typename TTube >
+class ITK_TEMPLATE_EXPORT TubeSpatialObjectToVTKPolyDataFilter : public SpatialObjectToVTKPolyDataFilter< TTube::SpatialObject::ObjectDimension >
 {
 public:
-  ITK_DISALLOW_COPY_AND_ASSIGN(BoxSpatialObjectToVTKPolyDataFilter);
+  ITK_DISALLOW_COPY_AND_ASSIGN(TubeSpatialObjectToVTKPolyDataFilter);
 
   /** Standard class type aliases. */
-  using Self = BoxSpatialObjectToVTKPolyDataFilter;
-  using Superclass = SpatialObjectToVTKPolyDataFilter< VDimension >;
+  using Self = TubeSpatialObjectToVTKPolyDataFilter;
+  using Superclass = SpatialObjectToVTKPolyDataFilter< TTube::SpatialObject::ObjectDimension >;
   using Pointer = SmartPointer<Self>;
   using ConstPointer = SmartPointer<const Self>;
 
@@ -46,11 +46,11 @@ public:
   itkNewMacro(Self);
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro(BoxSpatialObjectToVTKPolyDataFilter, SpatialObjectToVTKPolyDataFilter);
+  itkTypeMacro(TubeSpatialObjectToVTKPolyDataFilter, SpatialObjectToVTKPolyDataFilter);
 
   /** Some type alias. */
-  static constexpr unsigned int Dimension = VDimension;
-  using SpatialObjectType = BoxSpatialObject< Dimension >;
+  static constexpr unsigned int Dimension = TTube::Dimension;
+  using SpatialObjectType = TTube;
 
   /** Set the input in the form of an itk::Mesh */
   using Superclass::SetInput;
@@ -58,11 +58,23 @@ public:
   const SpatialObjectType * GetInput() const;
   const SpatialObjectType * GetInput(unsigned int idx) const;
 
+  /** Set/Get the number of sides on the tube. */
+  itkSetMacro( NumberOfSides, unsigned int );
+  itkGetConstMacro( NumberOfSides, unsigned int );
+
+  /** Use colors defined on the TubeSpatialObjectPoint */
+  itkBooleanMacro( UsePointColors);
+  itkSetMacro( UsePointColors, bool );
+  itkGetConstMacro( UsePointColors, bool );
+
 protected:
-  BoxSpatialObjectToVTKPolyDataFilter();
-  ~BoxSpatialObjectToVTKPolyDataFilter() override;
+  TubeSpatialObjectToVTKPolyDataFilter();
+  ~TubeSpatialObjectToVTKPolyDataFilter() override;
 
   void GenerateData() override;
+
+  unsigned int m_NumberOfSides{ 8 };
+  bool m_UsePointColors{ false };
 
 private:
 };
@@ -70,7 +82,7 @@ private:
 } // end namespace itk
 
 #ifndef ITK_MANUAL_INSTANTIATION
-#include "itkBoxSpatialObjectToVTKPolyDataFilter.hxx"
+#include "itkTubeSpatialObjectToVTKPolyDataFilter.hxx"
 #endif
 
 #endif
