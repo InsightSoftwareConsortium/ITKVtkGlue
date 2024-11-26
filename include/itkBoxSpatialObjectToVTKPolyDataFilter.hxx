@@ -20,7 +20,7 @@
 
 #include "itkBoxSpatialObjectToVTKPolyDataFilter.h"
 
-#include <vtkCubeSource.h>
+#include "vtkCubeSource.h"
 
 namespace itk
 {

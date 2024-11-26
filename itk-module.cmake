@@ -20,6 +20,7 @@ itk_module(ITKVtkGlue
     ITKImageFusion
     ITKStatistics
     ITKIOMeshVTK
+    ITKIOSpatialObjects
   EXCLUDE_FROM_DEFAULT
   DESCRIPTION
     "${DOCUMENTATION}")
